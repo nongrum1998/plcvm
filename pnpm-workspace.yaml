@@ -1,0 +1,43 @@
+# pnpm settings for this single-package repository.
+#
+# There is no `packages:` list — the repository root IS the app. This file
+# exists only to carry pnpm settings that cannot be expressed in `.npmrc`.
+#
+# `onlyBuiltDependencies` whitelists the two native/postinstall builds the app
+# actually needs. pnpm 10+ blocks every dependency postinstall script by
+# default; without these, `tsx` (used by app.config.ts and `pnpm clean`)
+# transpiles through esbuild, which requires its postinstall to run, and
+# `unrs-resolver` ships a native binary that is not usable without its build.
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - '@expo/ui@57.0.21'
+  - expo-constants@57.0.20
+  - expo-modules-core@57.0.20
+  - expo-router@57.0.24
+  - expo-updates@57.0.24
+  - expo@57.0.26
+
+# Version pins carried over from the former workspace. They are unrelated to
+# the app and are safe to drop if they ever become a problem.
+overrides:
+  fastq: 1.20.2
+  string.prototype.matchall: 4.0.12
+
+# `nativewind@4` omits `react-native` from its peerDependencies even though it
+# imports React Native at runtime. Declaring the missing peer lets pnpm bind it
+# to this project's own `react-native` instead of leaving it unresolved.
+packageExtensions:
+  nativewind@4.2.3:
+    peerDependencies:
+      react-native: '*'
+
+  # `react-native-css-interop`'s Metro config does a top-level `require('connect')`
+  # that the package never declares. Without this, `expo start` dies with
+  # "Cannot find module 'connect'" before Metro boots. The range cannot drag in
+  # a cross-SDK version, since the package is on its 0.2 line regardless.
+  react-native-css-interop@0.2:
+    dependencies:
+      connect: '^3.7.0'

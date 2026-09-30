@@ -1,0 +1,335 @@
+### --------------------------------------------
+### Login
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+     username: request.environment.get('PPO_NO'),
+     password: request.environment.get('FORMAT_PASSWORD')
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/login
+Content-Type: application/json
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "data": {
+#     "token": "[Redacted]"
+#   },
+#   "message": "Authenticate",
+#   "success": true
+# }
+# ----------------------------
+
+### --------------------------------------------
+### Pension statement
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+     pp_no: request.environment.get('PPO_NO')
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/paymentslip
+Content-Type: application/json
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "pdf": "string",
+#   "pension": [
+#     {
+#       "age_bonus": "string",
+#       "arr_gross": "string",
+#       "bp": "string",
+#       "comm_gross": "string",
+#       "da": "string",
+#       "date_frm": "string",
+#       "date_to": "string",
+#       "ddo_bill_date": "string",
+#       "ddo_bill_date_format": "string",
+#       "deduction": "string",
+#       "dp": "string",
+#       "dra": "string",
+#       "fin_year": "string",
+#       "gra_gross": "string",
+#       "ma": "string",
+#       "net_amt": "string",
+#       "no_of_months": "string",
+#       "oth": "string",
+#       "pen_gross": "string",
+#       "ppo_id": "string",
+#       "tran_date": "string",
+#       "tran_id": "string",
+#       "wa": "string"
+#     }
+#   ],
+#   "success": true
+# }
+# ----------------------------
+
+### --------------------------------------------
+### Pension logout
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+     token: request.environment.get('ACCESS_TOKEN')
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/logout
+Content-Type: application/json
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "message": "success",
+#   "status": true
+# }
+# ----------------------------
+
+### --------------------------------------------
+### get-ppo-status
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+     ppo_no: request.environment.get('PPO_NO')
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/get_ppo_status
+Content-Type: application/json
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "data": {
+#     "ppo_no": "string",
+#     "pname": "string",
+#     "dob": "string",
+#     "bank_accno": "string"
+#   },
+#   "success": true
+# }
+# ----------------------------
+
+### --------------------------------------------
+### get-user
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({}));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST http://localhost:3000/api/echo/user
+Content-Type: application/json
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "data": {
+#     "app_date": "string",
+#     "app_exp": "string",
+#     "bank_accno": "string",
+#     "dob": "string",
+#     "gender": "string",
+#     "member_id": "string",
+#     "mtype": "string",
+#     "pclass": "string",
+#     "pclass_cd": "string",
+#     "photo": "string",
+#     "pname": "string",
+#     "ppo_id": "string",
+#     "ppo_no": "string",
+#     "ptype_cd": "string",
+#     "rela": "string",
+#     "trea_code": "string",
+#     "treasury_name": "string"
+#   },
+#   "message": "string",
+#   "status": true
+# }
+# ----------------------------
+
+### --------------------------------------------
+### facial-registration
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+     ppo_no: request.environment.get('PPO_NO'),
+     dob: request.environment.get('DOB'),
+     bank_accno: request.environment.get('BANK_ACCNO'),
+     password: request.environment.get('FORMAT_PASSWORD'),
+     image: request.environment.get('EXPO_PUBLIC_TEST_IMAGE')
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/facial_registration
+Content-Type: application/json
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "data": {},
+#   "message": "string",
+#   "status": true
+# }
+# ----------------------------
+
+### --------------------------------------------
+### submit-dlc
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({ 
+    deviceName:"",
+    deviceId:"",
+    ppo_id:'',
+    ppo_no:""
+    nec:"0",
+    nmc:"0",
+    place: "",
+    image:""
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/dlc
+Content-Type: application/json
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "data": {},
+#   "message": "string",
+#   "status": true
+# }
+# ----------------------------
+
+### --------------------------------------------
+### dlc-status
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+     ppo_id: request.environment.get('PPO_ID')
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/dlc_status
+Authorization: Bearer {{ACCESS_TOKEN}}
+Content-Type: application/json
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "data": { 
+#     "app_date": null,
+#     "app_exp": null,
+#     "certificate_datetime": null,
+#     "certificate_id": null,
+#     "device_id": null,
+#     "device_name": null,
+#     "facial_regn_date": "[Redacted]",
+#     "facial_regn_no": "[Redacted]",
+#     "facial_status": "Approved",
+#     "nec": "NA",
+#     "nmc": "NA"
+#   },
+#   "message": "string",
+#   "status": true
+# }
+# ----------------------------

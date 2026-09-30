@@ -1,0 +1,45 @@
+@baseUrl=http://localhost:3000
+
+### --------------------------------------------
+### Encrypt helper
+# -------------- Pre Script -------------------------
+
+POST {{baseUrl}}/api/cpps/encrypt
+
+{
+  "message":"Success",
+  "data":{ 
+    "ppo_id": "MG/11xx",
+    "ppo_no": "MG/11xx"
+  }
+}
+
+# -------------- Post Script -------------------------
+
+
+### Decrypt helper
+POST {{baseUrl}}/api/cpps/decrypt
+
+{
+  "payload": "gAAAAABquAAG_2OqVN2LOOzged7AFx0YjYwD5MXojnhRL2gweNtZooHNpDAD7EEo2gTlf3VwFhCpquSZ6wqffrANaSnlVa182NTRX_wQISvK45WKyN3GaxSK8C0z_vocR_-mlH96_2CAClcfhmEG6Rf-BloC7hM3HWRZukYLEIPwVvHlRAKvx7deJ1xdKX8t6ufbA6ZzDyIr7fudalQoNkCJ2uyF8ZIRh8CpWnrymLwLh0R4mlNxWg06XSi70LfCDYfH2Mc6jOTGpPtydSWnt7LSsicCwqXjc1C1fdXmfx83JXA1lNCbxDfeM7DrRhEPjIb_49RIx5TvW7cuSkUL1P8AF6ImRA_KYMny0LZogeiLw2f26fsk2m0="
+}
+
+
+### format-password helper
+POST {{baseUrl}}/api/cpps/format-password
+
+{
+  "password": "{{PASSWORD}}"
+}
+
+### echo
+POST {{baseUrl}}/api/echo
+
+{ 
+  "url":"/dlc",
+  "status_code":200,
+  "data":"gAAAAABqugsaQW_X9E-7WMuuV7OSEunPjXS51nk5AZ-yarGYRkcXbwqMTUW8GWxpm3XFTBQ4nE0ZMEwuVVEIiL-RChHYGvaOon6U7fgUAPCTh14mJ7Wr4XxXozKl8qhBGogkvv1Ph_udoQ44gobQLbKoH_ng8W2mNNiMe-LKjUruCCA6hAvFgXw="
+}
+
+###
+GET {{baseUrl}}/api/echo

@@ -1,0 +1,39 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "types": ["jest"],
+    "paths": {
+      "@api": ["./src/shared/api/index.ts"],
+      "@api/*": ["./src/shared/api/*"],
+      "@assets/*": ["./src/shared/assets/*"],
+      "@components": ["./src/shared/components/index.ts"],
+      "@components/*": ["./src/shared/components/*"],
+      "@config": ["./src/shared/config/index.ts"],
+      "@config/*": ["./src/shared/config/*"],
+      "@features/*": ["./src/features/*"],
+      "@hooks": ["./src/shared/hooks/index.ts"],
+      "@hooks/*": ["./src/shared/hooks/*"],
+      "@lib": ["./src/shared/lib/index.ts"],
+      "@lib/*": ["./src/shared/lib/*"],
+      "@sharedTypes": ["./src/shared/types/index.ts"],
+      "@sharedTypes/*": ["./src/shared/types/*"],
+      "@storage": ["./src/shared/storage/index.ts"],
+      "@storage/*": ["./src/shared/storage/*"],
+      "@stores/*": ["./src/shared/stores/*"],
+      "@styles/*": ["./src/shared/styles/*"],
+      "@utils": ["./src/shared/utils/index.ts"],
+      "@utils/*": ["./src/shared/utils/*"],
+      "@validation/*": ["./src/shared/validation/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "css-env.d.ts",
+    "nativewind-env.d.ts"
+  ],
+  "exclude": ["node_modules", "dist", "scripts"]
+}
