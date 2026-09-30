@@ -87,11 +87,5 @@
     "tsx": "^4.23.15",
     "typescript": "6.0.3"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "unrs-resolver"
-    ]
-  },
   "private": true
 }

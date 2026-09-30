@@ -6,6 +6,7 @@ import { Button, Icon } from '@components';
 import { Input } from '@components/ui/input';
 import { useRegistrationStore } from '../store/registration';
 import { useState } from 'react';
+import { formatDate } from '@utils';
 
 /**
  * Step 2 of registration: date of birth and pension bank account number.
@@ -73,12 +74,7 @@ export const RegistrationForm = () => {
               value={value}
               onChangeText={(v) => {
                 const digits = v.replace(/\D/g, '').slice(0, 8);
-
-                const formatted = digits
-                  .replace(/^(\d{2})(\d)/, '$1/$2')
-                  .replace(/^(\d{2}\/\d{2})(\d)/, '$1/$2');
-
-                onChange(formatted);
+                onChange(formatDate(digits));
               }}
               onBlur={onBlur}
               placeholder="DD-MM-YYYY"

@@ -16,4 +16,10 @@ export interface UserT {
   rela: string;
   trea_code: string;
   treasury_name: string;
+  pan_dob: string;
+  pan_no: string;
+  height: string;
+  mobile_no: string;
+  comty_cd: string;
+  marital_cd: string;
 }

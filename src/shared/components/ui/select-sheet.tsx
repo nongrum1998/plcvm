@@ -55,6 +55,7 @@ interface SelectSheetProps {
 
   refetch?: () => void;
   loading?: boolean;
+  onCallback?: (value: boolean) => void;
 }
 
 /**
@@ -95,8 +96,13 @@ export const SelectSheet = (props: SelectSheetProps) => {
     disabled,
     refetch,
     loading,
+    onCallback,
   } = props;
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    onCallback && onCallback(open);
+  }, [open, onCallback]);
 
   const handleSelect = useCallback(
     (value: string) => {
@@ -118,7 +124,7 @@ export const SelectSheet = (props: SelectSheetProps) => {
       {label && (
         <Text
           className={cn(
-            'mb-2 ml-1 text-lg font-semibold',
+            'mb-2 ml-1 text-lg font-semibold capitalize',
             error ? 'text-destructive' : 'text-muted-foreground'
           )}>
           {label}

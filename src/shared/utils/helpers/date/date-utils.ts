@@ -47,3 +47,34 @@ export const parseYYYYMMDD = (value: string): Date | null => {
   date.setHours(0, 0, 0, 0);
   return date;
 };
+
+export const parseDDMMYYYY = (value: string): Date | null => {
+  const match = /^(\d{2})-(\d{2})-(\d{4})$/.exec(value);
+
+  if (!match) {
+    return null;
+  }
+
+  const [, dayStr, monthStr, yearStr] = match;
+
+  const day = Number(dayStr);
+  const month = Number(monthStr);
+  const year = Number(yearStr);
+
+  const date = new Date(year, month - 1, day);
+
+  // Ensure the date is actually valid (e.g. reject 31-02-2026)
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null;
+  }
+
+  date.setHours(0, 0, 0, 0);
+
+  return date;
+};
+
+export function formatDate(raw: string): string {
+  const digits = raw.replace(/\D/g, '').slice(0, 8);
+
+  return digits.replace(/^(\d{2})(\d)/, '$1/$2').replace(/^(\d{2}\/\d{2})(\d)/, '$1/$2');
+}

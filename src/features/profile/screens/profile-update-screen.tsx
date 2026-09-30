@@ -2,22 +2,98 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { View, Text } from 'react-native';
 import { Container } from '@components/layout';
-import { Button } from '@components';
-import { Input } from '@components/ui';
+import { Button, CodeDirectories, Ternary } from '@components';
+import { Input, AlertDescription, AlertTitle, Alert, Icon } from '@components/ui';
 import { useAuthStore } from '@stores/auth.store';
 import { useUpdateProfile } from '../hooks/use-update-profile';
 import { ProfileUpdateSchema, ProfileUpdateInput } from '../validators';
+import { formatDate } from '@utils';
+
+/** Upper bound on characters the PAN input accepts — the length of a real PAN. */
+const PAN_MAX_LENGTH = 10;
+
+/** Indian mobile numbers are exactly ten digits. */
+const MOBILE_MAX_LENGTH = 10;
+
+/** Longest plausible height in centimetres, with room for one decimal place. */
+const HEIGHT_MAX_LENGTH = 5;
+
+/**
+ * Strips a field's input down to the characters the API contract allows.
+ *
+ * Applied on every keystroke so the form value can never reach a state the
+ * schema would reject for a character reason — the user gets a length or
+ * format message instead of a confusing "invalid character" error.
+ *
+ * @param raw - The text as typed by the user.
+ * @param pattern - A character class describing the disallowed characters.
+ * @param maxLength - The maximum number of characters to keep.
+ * @param transform - An optional case transform applied after filtering.
+ * @returns The sanitized, length-capped string.
+ */
+function sanitize(
+  raw: string,
+  pattern: RegExp,
+  maxLength: number,
+  transform?: (value: string) => string
+): string {
+  const filtered = raw.replace(pattern, '').slice(0, maxLength);
+  return transform ? transform(filtered) : filtered;
+}
+
+/**
+ * The label, control and error message for a single profile field.
+ *
+ * Extracted because all six fields repeat the same wrapper; only the control
+ * itself differs.
+ */
+type FieldProps = {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+};
+
+/**
+ * Renders a field's uppercase label above its control and its validation error
+ * below.
+ */
+function Field({ label, error, children }: FieldProps) {
+  return (
+    <View className="gap-1.5">
+      <Text className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </Text>
+
+      {children}
+
+      {!!error && (
+        <Text className="mt-1 text-sm text-destructive" accessibilityLiveRegion="polite">
+          {error}
+        </Text>
+      )}
+    </View>
+  );
+}
 
 /**
  * Profile update form screen.
  *
- * Pre-fills the editable `name`/`username` fields from `useAuthStore.user` and
- * submits changes via `useUpdateProfile`. Shows an inline error banner on
- * failure and a success summary on success.
+ * Edits the six fields the `update_profile` endpoint accepts — date of birth,
+ * PAN number, mobile number, height, community and marital status. Community
+ * and marital status are picked from the option lists in
+ * `../utils/constants/profile-options` and submitted as codes, not labels.
+ *
+ * Date of birth is prefilled from `useAuthStore.user.dob`; the other five have
+ * no counterpart on `UserT` and start empty.
+ *
+ * The success banner sits above the form rather than replacing it, so a
+ * mis-entered value can be corrected without navigating away.
+ *
+ * @returns The rendered profile update screen.
  */
 export function ProfileUpdateScreen() {
   const user = useAuthStore((s) => s.user);
-  const { mutate, isPending, isError, error, isSuccess } = useUpdateProfile();
+  const { mutate, isPending, data, isSuccess } = useUpdateProfile();
 
   const {
     control,
@@ -26,15 +102,16 @@ export function ProfileUpdateScreen() {
   } = useForm<ProfileUpdateInput>({
     resolver: zodResolver(ProfileUpdateSchema),
     defaultValues: {
-      name: user?.pname ?? '',
-      username: user?.ppo_no ?? '',
+      pan_dob: user?.pan_dob ?? '',
+      pan_no: user?.pan_no ?? '',
+      mobile_no: user?.mobile_no ?? '',
+      height: user?.height ?? '',
+      comty_cd: user?.comty_cd ?? '',
+      marital_cd: user?.marital_cd ?? '',
     },
   });
 
-  const onSubmit = (data: ProfileUpdateInput) => {
-    const parsed = ProfileUpdateSchema.safeParse(data);
-    if (parsed.success) mutate(data);
-  };
+  const onSubmit = (data: ProfileUpdateInput) => mutate(data);
 
   return (
     <Container scrollable>
@@ -54,123 +131,196 @@ export function ProfileUpdateScreen() {
           </Text>
         </View>
 
-        {isSuccess ? (
-          /* Success */
-          <View className="my-4 items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
-            <Text className="text-center text-base font-bold text-emerald-950">
-              Profile Updated
-            </Text>
+        <View className="gap-4 rounded-md border border-gray-200/80 bg-card p-5">
+          {/* API Error */}
+          <Ternary
+            condition={isSuccess && data?.success}
+            ifTrue={
+              <Alert>
+                <View className="flex-1">
+                  <AlertTitle className="text-sm">Successfully</AlertTitle>
+                  <AlertDescription>{data?.message}</AlertDescription>
+                </View>
+              </Alert>
+            }
+            ifFalse={
+              <Ternary
+                condition={isSuccess && !data.success}
+                ifFalse={null}
+                ifTrue={
+                  <Alert variant="destructive">
+                    <Icon name="alert-circle" size={18} className="mt-0.5 text-destructive" />
+                    <View className="flex-1">
+                      <AlertTitle className="text-sm">Failed to Update</AlertTitle>
+                      <AlertDescription>{data?.message}</AlertDescription>
+                    </View>
+                  </Alert>
+                }
+              />
+            }
+          />
 
-            <Text className="text-center text-xs leading-5 text-emerald-800">
-              Your profile has been updated.
-            </Text>
-          </View>
-        ) : (
-          /* Form */
-          <View className="gap-4 rounded-md border border-gray-200/80 bg-card p-5">
-            {/* API Error */}
-            {isError && (
-              <View className="border-destructive/30 bg-destructive/10 rounded-xl border p-3">
-                <Text className="text-center text-xs font-semibold text-destructive">
-                  {error?.message || 'Failed to update profile. Please try again.'}
-                </Text>
+          {/* Date of Birth */}
+          <Controller
+            control={control}
+            name="pan_dob"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Field label="Date of Birth" error={errors.pan_dob?.message}>
+                <Input
+                  value={value}
+                  onChangeText={(text) => onChange(formatDate(text))}
+                  onBlur={onBlur}
+                  placeholder="DD/MM/YYYY"
+                  keyboardType="number-pad"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  error={!!errors.pan_dob?.message}
+                  accessibilityLabel="Date of birth, format day slash month slash year"
+                />
+              </Field>
+            )}
+          />
+
+          {/* PAN Number */}
+          <Controller
+            control={control}
+            name="pan_no"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Field label="PAN Number" error={errors.pan_no?.message}>
+                <Input
+                  value={value}
+                  onChangeText={(t) => onChange(t)}
+                  onBlur={onBlur}
+                  placeholder="ABCDE1234F"
+                  autoCapitalize="characters"
+                  autoCorrect={false}
+                  maxLength={PAN_MAX_LENGTH}
+                  error={!!errors.pan_no?.message}
+                  accessibilityLabel="PAN number, five letters four digits one letter"
+                />
+              </Field>
+            )}
+          />
+
+          {/* Mobile Number */}
+          <Controller
+            control={control}
+            name="mobile_no"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Field label="Mobile Number" error={errors.mobile_no?.message}>
+                <Input
+                  value={value}
+                  onChangeText={(text) => onChange(sanitize(text, /\D/g, MOBILE_MAX_LENGTH))}
+                  onBlur={onBlur}
+                  placeholder="Enter 10-digit mobile number"
+                  keyboardType="number-pad"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  maxLength={MOBILE_MAX_LENGTH}
+                  error={!!errors.mobile_no?.message}
+                  accessibilityLabel="Mobile number, ten digits"
+                />
+              </Field>
+            )}
+          />
+
+          {/* Height */}
+          <Controller
+            control={control}
+            name="height"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Field label="Height (cm)" error={errors.height?.message}>
+                <Input
+                  value={value}
+                  onChangeText={(text) =>
+                    onChange(
+                      sanitize(text, /[^\d.]/g, HEIGHT_MAX_LENGTH).replace(/(\..*)\./g, '$1')
+                    )
+                  }
+                  onBlur={onBlur}
+                  placeholder="Enter height in centimetres"
+                  keyboardType="decimal-pad"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  maxLength={HEIGHT_MAX_LENGTH}
+                  error={!!errors.height?.message}
+                  accessibilityLabel="Height in centimetres"
+                />
+              </Field>
+            )}
+          />
+
+          {/* Community */}
+
+          <Controller
+            control={control}
+            name="gender"
+            render={({ field: { onChange, value } }) => (
+              <View>
+                <CodeDirectories
+                  selectVal={value}
+                  onSelect={(val) => onChange(val)}
+                  code="GENDER"
+                  error={errors.comty_cd?.message || ''}
+                />
               </View>
             )}
+          />
+          <Controller
+            control={control}
+            name="comty_cd"
+            render={({ field: { onChange, value } }) => (
+              <View>
+                <CodeDirectories
+                  selectVal={value}
+                  onSelect={(val) => onChange(val)}
+                  code="COMMUNITY"
+                  error={errors.comty_cd?.message || ''}
+                />
+              </View>
+            )}
+          />
 
-            {/* Name */}
-            <View className="gap-1.5">
-              <Text className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                Name
-              </Text>
+          {/* Marital Status */}
+          <Controller
+            control={control}
+            name="religion_cd"
+            render={({ field: { onChange, value } }) => (
+              <View>
+                <CodeDirectories
+                  selectVal={value}
+                  onSelect={(val) => onChange(val)}
+                  code="RELIGION"
+                  error={errors.marital_cd?.message || ''}
+                />
+              </View>
+            )}
+          />
+          <Controller
+            control={control}
+            name="marital_cd"
+            render={({ field: { onChange, value } }) => (
+              <View>
+                <CodeDirectories
+                  selectVal={value}
+                  onSelect={(val) => onChange(val)}
+                  code="MARITAL"
+                  error={errors.marital_cd?.message || ''}
+                />
+              </View>
+            )}
+          />
 
-              <Controller
-                control={control}
-                name="name"
-                render={({ field: { onChange, value } }) => (
-                  <View>
-                    <Input
-                      value={value}
-                      onChangeText={onChange}
-                      placeholder="Enter your name"
-                      error={!!errors.name?.message}
-                      autoCapitalize="words"
-                    />
-
-                    {errors.name && (
-                      <Text className="mt-1 text-sm text-destructive">{errors.name.message}</Text>
-                    )}
-                  </View>
-                )}
-              />
-            </View>
-
-            <View className="gap-1.5">
-              <Text className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                Organization
-              </Text>
-
-              <Controller
-                control={control}
-                name="organization"
-                render={({ field: { onChange, value } }) => (
-                  <View>
-                    <Input
-                      value={value}
-                      onChangeText={onChange}
-                      placeholder="Enter your organization"
-                      error={!!errors.organization?.message}
-                      autoCapitalize="none"
-                    />
-
-                    {errors.organization && (
-                      <Text className="mt-1 text-sm text-destructive">
-                        {errors.organization.message}
-                      </Text>
-                    )}
-                  </View>
-                )}
-              />
-            </View>
-            {/* Username */}
-            <View className="gap-1.5">
-              <Text className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                Username
-              </Text>
-
-              <Controller
-                control={control}
-                name="username"
-                render={({ field: { onChange, value } }) => (
-                  <View>
-                    <Input
-                      value={value}
-                      onChangeText={onChange}
-                      placeholder="Enter your username"
-                      error={!!errors.username?.message}
-                      autoCapitalize="none"
-                    />
-
-                    {errors.username && (
-                      <Text className="mt-1 text-sm text-destructive">
-                        {errors.username.message}
-                      </Text>
-                    )}
-                  </View>
-                )}
-              />
-            </View>
-
-            {/* Submit */}
-            <Button
-              size="lg"
-              onPress={handleSubmit(onSubmit)}
-              disabled={isPending}
-              isLoading={isPending}
-              activeOpacity={0.8}>
-              Save Changes
-            </Button>
-          </View>
-        )}
+          {/* Submit */}
+          <Button
+            size="lg"
+            onPress={handleSubmit(onSubmit)}
+            disabled={isPending}
+            isLoading={isPending}
+            activeOpacity={0.8}>
+            Save Changes
+          </Button>
+        </View>
       </View>
     </Container>
   );

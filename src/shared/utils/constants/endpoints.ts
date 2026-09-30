@@ -29,7 +29,7 @@ export const ENDPOINTS = {
     /** Changes the user's password. */
     CHANGE_PASSWORD: '/change_password',
     /** Updates the user's profile. */
-    UPDATE_PROFILE: '/update_profile/',
+    UPDATE_PROFILE: '/save_user',
   },
 
   /** DLC (life certificate) endpoints. */
@@ -52,4 +52,5 @@ export const ENDPOINTS = {
      * `EXPO_PUBLIC_DAT_API_URL`. */
     PAYMENT_SLIP: `/paymentslip`,
   },
+  CODE_DIRECTORIES: '/getcodedirectories',
 } as const;

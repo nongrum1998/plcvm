@@ -20,16 +20,14 @@ POST {{baseUrl}}/api/cpps/encrypt
 ### Decrypt helper
 POST {{baseUrl}}/api/cpps/decrypt
 
-{
-  "payload": "gAAAAABquAAG_2OqVN2LOOzged7AFx0YjYwD5MXojnhRL2gweNtZooHNpDAD7EEo2gTlf3VwFhCpquSZ6wqffrANaSnlVa182NTRX_wQISvK45WKyN3GaxSK8C0z_vocR_-mlH96_2CAClcfhmEG6Rf-BloC7hM3HWRZukYLEIPwVvHlRAKvx7deJ1xdKX8t6ufbA6ZzDyIr7fudalQoNkCJ2uyF8ZIRh8CpWnrymLwLh0R4mlNxWg06XSi70LfCDYfH2Mc6jOTGpPtydSWnt7LSsicCwqXjc1C1fdXmfx83JXA1lNCbxDfeM7DrRhEPjIb_49RIx5TvW7cuSkUL1P8AF6ImRA_KYMny0LZogeiLw2f26fsk2m0="
-}
+{"payload": "gAAAAABqvO6dPIqUvEQwiB5i7MMKA1RkFQvsmWdKakGgAJP4uMN7BieSXiSBZt9rZwgTJlV-7W2D_gIdZAmpXDWYblx111rKr3G9lTiZZsa_NcLUynQDBT9fIdtXJSdjcqJyNYjlNC9tkWOIIJH48pqdJKuwt3arGs1nstsSDRGNDLTYvGczJV_1w1_NgH-dq5Nds_U0AwcynGcF5wARwlZOkqGaX2miLcwpOeJ67-aMxc6LzxEBnA_8gbCe-TUUQG_ziM4i5k_q09V_ELcOBDf9mRlRNoOchQWeqUkcKxzSbQechwPXTrYwYAJfVHeOOX_8Hrp3Kiy5iQTjcGBuDFDMsLSvf08TnQgJSEZKp-drh0qOMqVfL4M="}
 
 
 ### format-password helper
 POST {{baseUrl}}/api/cpps/format-password
 
 {
-  "password": "{{PASSWORD}}"
+  "password": ""
 }
 
 ### echo

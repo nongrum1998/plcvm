@@ -333,3 +333,91 @@ Content-Type: application/json
 #   "status": true
 # }
 # ----------------------------
+
+### --------------------------------------------
+### code directory
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+  // ----- Code type ----
+  // R7	RELATIONSHIP
+  // RG	RELIGION
+  // MS	MARITAL
+  // CT	COMMUNITY
+  // ET	SALUTATION
+  // RO  Roles
+  // GN	GENDER
+  // ----- Code type ----
+     codetype:"R7"
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/getcodedirectories
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "data": [ 
+#     {
+#       "codevalue": "string",
+#       "description": "string"
+#    }
+#   ],
+#   "message": "string",
+#   "status": true
+# }
+# ----------------------------
+
+### --------------------------------------------
+### save user
+### --------------------------------------------
+# ------------ Pre-script -------------------
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+    comty_cd: "7",
+    gender: "M",
+    height: "11111",
+    marital_cd: "3",
+    member_id: "M26G16O561441654",
+    mobile_no: "1111111111",
+    pan_dob: "18/04/1999",
+    pan_no: "ABCDE1234F",
+    ppo_id: "P26F05P494841997",
+    religion_cd: "7"
+   }));
+
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{BASE_URL}}/save_user
+
+{
+  "payload": "{{ENC_PAYLOAD}}"
+}
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+# ----------------------------
+# Response Schema Reference
+# ----------------------------
+# {
+#   "data": {},
+#   "message": "string",
+#   "status": true
+# }
+# ----------------------------
