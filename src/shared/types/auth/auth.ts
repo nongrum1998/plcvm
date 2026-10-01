@@ -22,4 +22,5 @@ export interface UserT {
   mobile_no: string;
   comty_cd: string;
   marital_cd: string;
+  email: string;
 }

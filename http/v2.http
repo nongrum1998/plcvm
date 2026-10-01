@@ -171,7 +171,7 @@ Content-Type: application/json
    require("./scripts/enc-req.http.js");
 %}
 
-POST http://localhost:3000/api/echo/user
+POST {{BASE_URL}}/user
 Content-Type: application/json
 
 {
@@ -396,9 +396,9 @@ POST {{BASE_URL}}/getcodedirectories
     pan_dob: "18/04/1999",
     pan_no: "ABCDE1234F",
     ppo_id: "P26F05P494841997",
-    religion_cd: "7"
+    religion_cd: "7",
+    image:""
    }));
-
    require("./scripts/enc-req.http.js");
 %}
 

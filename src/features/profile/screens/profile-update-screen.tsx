@@ -8,6 +8,7 @@ import { useAuthStore } from '@stores/auth.store';
 import { useUpdateProfile } from '../hooks/use-update-profile';
 import { ProfileUpdateSchema, ProfileUpdateInput } from '../validators';
 import { formatDate } from '@utils';
+import z from 'zod';
 
 /** Upper bound on characters the PAN input accepts — the length of a real PAN. */
 const PAN_MAX_LENGTH = 10;
@@ -91,6 +92,11 @@ function Field({ label, error, children }: FieldProps) {
  *
  * @returns The rendered profile update screen.
  */
+
+const ProfileSchema = ProfileUpdateSchema.omit({ image: true });
+
+type ProfileInput = z.infer<typeof ProfileSchema>;
+
 export function ProfileUpdateScreen() {
   const user = useAuthStore((s) => s.user);
   const { mutate, isPending, data, isSuccess } = useUpdateProfile();
@@ -99,19 +105,25 @@ export function ProfileUpdateScreen() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProfileUpdateInput>({
-    resolver: zodResolver(ProfileUpdateSchema),
+  } = useForm<ProfileInput>({
+    resolver: zodResolver(ProfileSchema),
     defaultValues: {
-      pan_dob: user?.pan_dob ?? '',
+      pan_dob: (user?.pan_dob || user?.dob) ?? '',
       pan_no: user?.pan_no ?? '',
       mobile_no: user?.mobile_no ?? '',
       height: user?.height ?? '',
       comty_cd: user?.comty_cd ?? '',
       marital_cd: user?.marital_cd ?? '',
+      gender: user?.gender,
+      email: user?.email,
     },
   });
 
-  const onSubmit = (data: ProfileUpdateInput) => mutate(data);
+  const onSubmit = (data: ProfileInput) =>
+    mutate({
+      ...data,
+      image: '',
+    });
 
   return (
     <Container scrollable>
@@ -184,7 +196,7 @@ export function ProfileUpdateScreen() {
             control={control}
             name="pan_dob"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Field label="Date of Birth" error={errors.pan_dob?.message}>
+              <Field label="Date of Birth (As on Pan)" error={errors.pan_dob?.message}>
                 <Input
                   value={value}
                   onChangeText={(text) => onChange(formatDate(text))}

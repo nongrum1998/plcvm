@@ -31,11 +31,15 @@ export function ProfileScreen() {
   }
 
   const fields: { label: string; value: string }[] = [
+    { label: 'Email', value: user.email || '—' },
     { label: 'Name', value: user.pname },
     { label: 'Username', value: user.ppo_no },
+    { label: 'Mobile No.', value: user.mobile_no },
     { label: 'Date of birth', value: user.dob },
-    { label: 'Gender', value: user.gender },
-    { label: 'Pension Class', value: user.pclass || '—' },
+    {
+      label: 'Gender',
+      value: user.gender === 'M' ? 'Male' : user.gender === 'F' ? 'Female' : 'Other',
+    },
     { label: 'Treasury', value: user.treasury_name || '—' },
   ];
 

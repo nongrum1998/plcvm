@@ -38,6 +38,7 @@ function isRealCalendarDate(value: string): boolean {
  */
 
 export const ProfileUpdateSchema = z.object({
+  image: z.string('Image is required').min(1, 'Image should be at least 1 in length'),
   email: z.email('Please enter a valid email'),
   religion_cd: z.string().trim().min(1, 'Religion is required'),
   gender: z.string().trim().min(1, 'Gender is required'),
