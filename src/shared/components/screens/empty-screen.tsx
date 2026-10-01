@@ -37,7 +37,7 @@ export const EmptyScreen = ({
   return (
     <Container className={cn('flex-1 items-center justify-center px-6')}>
       <View className={cn('mb-6 h-24 w-24 items-center justify-center rounded-md bg-primary')}>
-        <Icon name="file-not-found" className="text-white" size={48} />
+        <Icon name="sub-node-delete-icon" className="text-white" size={40} />
       </View>
 
       <Text className={cn('mb-2 text-center text-2xl font-bold text-foreground')}>{title}</Text>

@@ -30,7 +30,7 @@ import PropertyDeleteIcon from '@hugeicons/core-free-icons/PropertyDeleteIcon';
 import ReceiptTextIcon from '@hugeicons/core-free-icons/ReceiptTextIcon';
 import Download01Icon from '@hugeicons/core-free-icons/Download01Icon';
 import FileCheckIcon from '@hugeicons/core-free-icons/FileCheckIcon';
-
+import SubnodeDeleteIcon from '@hugeicons/core-free-icons/SubnodeDeleteIcon';
 /**
  * Central icon re-export layer.
  *
@@ -77,4 +77,5 @@ export {
   ReceiptTextIcon,
   Download01Icon,
   FileCheckIcon,
+  SubnodeDeleteIcon,
 };

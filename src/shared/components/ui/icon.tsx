@@ -33,6 +33,7 @@ import {
   ReceiptTextIcon,
   Download01Icon,
   FileCheckIcon,
+  SubnodeDeleteIcon,
 } from './icons';
 import { cn } from '@utils';
 
@@ -69,6 +70,7 @@ export type IconName =
   | 'receipt'
   | 'file-not-found'
   | 'file-check-02'
+  | 'sub-node-delete-icon'
   | 'download-01';
 
 type Props = {
@@ -157,6 +159,8 @@ const getHugeIcon = (name: IconName) => {
       return Download01Icon;
     case 'file-check-02':
       return FileCheckIcon;
+    case 'sub-node-delete-icon':
+      return SubnodeDeleteIcon;
     default:
       return MenuIcon;
   }
