@@ -42,26 +42,26 @@ export const ProviderWrapper = ({ children }: Props) => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider className="flex-1">
           <StatusBar style="auto" animated />
-          <RootProvider>
-            <LocationProvider>
-              <CameraProvider>
-                <TQueryProvider queryClient={queryClient}>
-                  <QueryErrorResetBoundary>
-                    <AuthInitializer>
-                      <AuthRedirect
-                        isSignedIn={isSignedIn}
-                        isLoading={isAuthLoading}
-                        guestOnly={GUEST_ONLY_ROUTES}
-                        publicOnly={PUBLIC_ROUTES}>
+          <TQueryProvider queryClient={queryClient}>
+            <QueryErrorResetBoundary>
+              <AuthInitializer>
+                <AuthRedirect
+                  isSignedIn={isSignedIn}
+                  isLoading={isAuthLoading}
+                  guestOnly={GUEST_ONLY_ROUTES}
+                  publicOnly={PUBLIC_ROUTES}>
+                  <RootProvider>
+                    <LocationProvider>
+                      <CameraProvider>
                         {children}
                         <UpdateModal />
-                      </AuthRedirect>
-                    </AuthInitializer>
-                  </QueryErrorResetBoundary>
-                </TQueryProvider>
-              </CameraProvider>
-            </LocationProvider>
-          </RootProvider>
+                      </CameraProvider>
+                    </LocationProvider>
+                  </RootProvider>
+                </AuthRedirect>
+              </AuthInitializer>
+            </QueryErrorResetBoundary>
+          </TQueryProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </GlobalErrorBoundary>
