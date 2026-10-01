@@ -21,7 +21,6 @@ export const useAppUpdateStore = create<AppUpdateStore>()((set) => ({
 
   checkAndDownloadUpdate: async () => {
     if (__DEV__) {
-      logger.log('[AppUpdateStore] Skipping update check in development mode.');
       return;
     }
 

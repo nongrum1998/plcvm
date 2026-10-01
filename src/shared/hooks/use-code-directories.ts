@@ -22,6 +22,11 @@ export function useCodeDirectories({ code, isEnable = false }: UseCodeDirectorie
       data?.map((val) => ({
         value: val.codevalue,
         label: val.description,
-      })) || [],
+      })) || [
+        {
+          value: 'N/A',
+          label: 'N/A',
+        },
+      ],
   });
 }
