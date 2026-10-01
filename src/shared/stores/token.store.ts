@@ -1,29 +1,25 @@
-import { createSecureStorage, createStorageKey } from '@storage';
+import * as SecureStore from 'expo-secure-store';
 
 /**
- * SecureStore-backed key/value store, created once and shared by every token
- * operation so the SecureStore options stay consistent across the module.
+ * Namespaced keychain keys holding the session tokens.
  *
- * `expo-secure-store` rejects keys outside `/^[\w.-]+$/`; `createStorageKey`
- * namespaces them under `pension.` and fails fast on segments the native layer
- * would refuse, so an invalid key surfaces here rather than at a keychain call.
+ * `expo-secure-store` rejects keys outside `/^[\w.-]+/`, so the namespace is
+ * dot-separated rather than the conventional `namespace:key`. These literals
+ * are the contract with the device keychain: changing either one logs out every
+ * signed-in user on upgrade.
  */
-const storage = createSecureStorage();
-
-/** Namespaced keychain key holding the main access token. */
-const accessTokenKey = createStorageKey('auth', 'accessToken');
-
-/** Namespaced keychain key holding the refresh token. */
-const refreshTokenKey = createStorageKey('auth', 'refreshToken');
+const ACCESS_TOKEN_KEY = 'pension.auth.accessToken';
+const REFRESH_TOKEN_KEY = 'pension.auth.refreshToken';
 
 /**
  * Manages persistence of authentication tokens in the device secure store.
  *
- * Wraps `@storage`'s `createSecureStorage` to read, write and delete
- * the access and refresh tokens. Values are stored encrypted at rest in the
- * platform keychain/keystore under the namespaced keys `pension.auth.accessToken`
- * and `pension.auth.refreshToken`. All operations are async and may reject if
- * the secure store is unavailable or a value cannot be decrypted.
+ * Reads, writes and deletes the access and refresh tokens, stored encrypted at
+ * rest in the platform keychain/keystore. All operations are async and may
+ * reject if the secure store is unavailable or a value cannot be decrypted.
+ *
+ * These are the app's only secrets: everything else the store caches is either
+ * non-sensitive or re-derivable from the API.
  *
  * The public method signatures are depended on by the axios client in
  * `@utils/http`, so they must not change.
@@ -38,7 +34,7 @@ export const TokenStoreManager = {
    *   unavailability or decryption failure).
    */
   async getAccessToken(): Promise<string | null> {
-    return await storage.get(accessTokenKey);
+    return await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
   },
 
   /**
@@ -50,7 +46,7 @@ export const TokenStoreManager = {
    * @throws {Error} If the secure store cannot be written.
    */
   async addAccessToken(token: string): Promise<void> {
-    return await storage.set(accessTokenKey, token);
+    await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, token);
   },
 
   /**
@@ -61,7 +57,7 @@ export const TokenStoreManager = {
    * @throws {Error} If the secure store cannot be accessed.
    */
   async removeAccessToken(): Promise<void> {
-    return await storage.remove(accessTokenKey);
+    await SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY);
   },
 
   /**
@@ -72,7 +68,7 @@ export const TokenStoreManager = {
    * @throws {Error} If the secure store cannot be read.
    */
   async getRefreshToken(): Promise<string | null> {
-    return await storage.get(refreshTokenKey);
+    return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
   },
 
   /**
@@ -84,7 +80,7 @@ export const TokenStoreManager = {
    * @throws {Error} If the secure store cannot be written.
    */
   async addRefreshToken(token: string): Promise<void> {
-    return await storage.set(refreshTokenKey, token);
+    await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, token);
   },
 
   /**
@@ -95,7 +91,7 @@ export const TokenStoreManager = {
    * @throws {Error} If the secure store cannot be accessed.
    */
   async removeRefreshToken(): Promise<void> {
-    return await storage.remove(refreshTokenKey);
+    await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
   },
 
   /**
@@ -109,7 +105,7 @@ export const TokenStoreManager = {
    * @throws {Error} If the secure store cannot be accessed.
    */
   async removeTokens(): Promise<void> {
-    await storage.remove(accessTokenKey);
-    await storage.remove(refreshTokenKey);
+    await SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY);
+    await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
   },
 };

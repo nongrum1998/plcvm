@@ -13,9 +13,10 @@ const setItemAsyncMock = jest.mocked(setItemAsync);
 const deleteItemAsyncMock = jest.mocked(deleteItemAsync);
 
 /**
- * Keys are namespaced by `@storage`'s `createStorageKey`. These
- * literals are the contract between this store and the device keychain — if
- * the segments change, every signed-in user is logged out on upgrade.
+ * `expo-secure-store` rejects keys outside `/^[\w.-]+/`, so these are
+ * dot-namespaced. The literals are the contract between this store and the
+ * device keychain — if they change, every signed-in user is logged out on
+ * upgrade.
  */
 const ACCESS_TOKEN_KEY = 'pension.auth.accessToken';
 const REFRESH_TOKEN_KEY = 'pension.auth.refreshToken';

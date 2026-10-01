@@ -39,9 +39,9 @@ Metro's own alias resolution, which `tsc` does not.
 - `src/shared/` — cross-cutting, one directory per concern:
   `api/` (axios factory + response handling), `components/` (`ui`, `layout`,
   `common`, `screens`, `providers`), `config/`, `hooks/`, `lib/encryption`,
-  `storage/` (keychain-backed zustand persistence), `stores/` (zustand),
-  `types/` (`api`, `auth`, `page`, `tab`), `utils/` (`constants`, `helpers`,
-  `http`, `logger`, `react-query`), `validation/` (shared zod schemas).
+  `stores/` (zustand), `types/` (`api`, `auth`, `page`, `tab`), `utils/`
+  (`constants`, `helpers`, `http`, `logger`, `react-query`), `validation/`
+  (shared zod schemas).
 - `expo-config/` — build-time Expo config. Plain Node, evaluated only by
   `app.config.ts`; never bundled. Kept out of `src/` so Metro cannot reach it.
 - `test/setup.ts` — Jest setup and the native-module mock layer.
@@ -52,7 +52,7 @@ Metro's own alias resolution, which `tsc` does not.
 - Use tsconfig path aliases. Each has both a bare form (a barrel) and a
   wildcard form: `@api`, `@api/*`, `@assets/*`, `@components`, `@components/*`,
   `@config`, `@features/*`, `@hooks`, `@hooks/*`, `@lib`, `@lib/*`,
-  `@sharedTypes`, `@sharedTypes/*`, `@storage`, `@stores/*`, `@styles/*`,
+  `@sharedTypes`, `@sharedTypes/*`, `@stores/*`, `@styles/*`,
   `@utils`, `@utils/*`, `@validation/*`. Avoid relative imports across slices.
 - **Inside `src/shared/components/`, import the specific sub-barrel** (`../ui`,
   `../common`, `../screens`), never the top-level `@components` barrel. The
@@ -122,5 +122,13 @@ Metro's own alias resolution, which `tsc` does not.
 - `usePreventScreenCapture()` is mounted globally in `ProviderWrapper` — keep it.
 - Sensitive request payloads are Fernet-encrypted
   (`src/shared/lib/encryption`, key from `EXPO_PUBLIC_FERNET_KEY`).
+- The keychain is for **secrets only** — the session tokens in
+  `stores/token.store.ts`. Stores call `expo-secure-store` directly; there is no
+  persistence wrapper layer, so each store owns its own keychain reads and
+  writes. Keychain keys are dot-namespaced (`pension.*`) because the native API
+  rejects colons, and those literals are a compatibility contract: changing one
+  logs every signed-in user out on upgrade. SecureStore is a keychain entry, not
+  a database — values above ~2 KB are unsuitable on Android, so do not use it
+  for bulk or frequently rewritten state.
 - Cleartext HTTP is disabled in production
   (`usesCleartextTraffic: false` in `expo-config/build-properties.ts`).

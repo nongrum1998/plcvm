@@ -6,22 +6,22 @@ type Props = {
 };
 
 /**
- * Hydrates the auth store once zustand persistence has finished loading.
+ * Restores the auth session once, at app start.
  *
- * Mount this component at the root of the app so the persisted authentication
- * state (user, tokens, and flags) is rehydrated into memory before any
- * screens read it. It handles both cases: hydration already complete at mount
- * time and hydration that finishes later (subscribing via onFinishHydration).
+ * Mount this component at the root of the app so the cached profile and the
+ * stored token are resolved into memory before any screens read the store.
+ * {@link useAuthStore._hydrate} reads the keychain cache and, whenever a token
+ * is present, refreshes the profile from the API.
  *
- * Renders its children unchanged and does not block rendering while
- * hydration is pending.
+ * Renders its children unchanged and does not block rendering. The redirect
+ * gate is driven separately: `isAuthLoading` starts `true` and `AuthRedirect`
+ * shows a loading screen until hydration settles.
  *
  * @param props - The component props.
  * @param props.children - The child tree to render, typically the app
  *   navigator/screens.
  *
- * @returns The children wrapped in a fragment, or null while the effect
- *   cleanup runs.
+ * @returns The children wrapped in a fragment.
  *
  * @example
  * <AuthInitializer>
@@ -32,14 +32,7 @@ export const AuthInitializer = ({ children }: Props) => {
   const hydrate = useAuthStore((s) => s._hydrate);
 
   useEffect(() => {
-    if (useAuthStore.persist.hasHydrated()) {
-      hydrate();
-    } else {
-      const unsub = useAuthStore.persist.onFinishHydration(() => {
-        hydrate();
-      });
-      return () => unsub();
-    }
+    void hydrate();
   }, [hydrate]);
 
   return <>{children}</>;

@@ -1,20 +1,19 @@
 import { waitFor } from '@testing-library/react-native';
 
 import { http } from '@utils/http';
+import { useAuthStore } from '@stores/auth.store';
 import type { UserT } from '@sharedTypes/auth/auth';
 
 /**
- * In-memory stand-in for the device keychain. Declared at module scope so the
- * mock factory can close over it, and shared across `jest.isolateModules`
- * reloads of the store under test.
+ * In-memory stand-in for the device keychain, shared by the whole suite so the
+ * store's real `expo-secure-store` calls observe it.
  */
 const mockBacking = new Map<string, string>();
 
 /**
  * Keys passed to `getItemAsync`, in order. Tracked here rather than asserted on
- * the jest mocks because `jest.isolateModules` rebuilds the mocked
- * `expo-secure-store` module — and its `jest.fn()`s — on every reload, while
- * this array lives in the test file's own module scope and stays stable.
+ * the jest mocks so a single array in the test file's module scope stays stable
+ * regardless of module-load ordering.
  */
 const mockReads: string[] = [];
 
@@ -36,9 +35,9 @@ jest.mock('@utils', () => ({
   logger: { log: jest.fn(), warn: jest.fn(), error: jest.fn() },
 }));
 
-/** The namespaced persist key `@storage` writes the auth session to. */
+/** The namespaced key `useAuthStore` caches the profile under. */
 const AUTH_STORAGE_KEY = 'pension.auth';
-/** The pre-migration key. Nothing should read or write this any more. */
+/** The pre-refactor key. Nothing should read or write this any more. */
 const LEGACY_AUTH_STORAGE_KEY = 'auth-storage';
 
 const httpPostMock = jest.mocked(http.post);
@@ -70,141 +69,162 @@ const user: UserT = {
   email: 'test.pensioner@example.com',
 };
 
-/**
- * Builds a fresh auth store so `persist` hydration re-runs against the current
- * `mockBacking`.
- *
- * `jest.isolateModules` hands the callback a new module registry, which is why
- * the store has to be pulled in with a lazy `require` rather than a hoisted
- * import: a top-level import would resolve once, against the original registry,
- * and hydration would never run per test.
- */
-const loadAuthStore = () => {
-  let store!: typeof import('@stores/auth.store').useAuthStore;
-  jest.isolateModules(() => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports -- see above
-    store = require('@stores/auth.store').useAuthStore;
-  });
-  return store;
-};
-
+/** Seeds the access token so `fetchUser` will hit the API. */
 const seedToken = (token = 'access-token') => {
   mockBacking.set('pension.auth.accessToken', token);
 };
 
-describe('useAuthStore persistence', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockBacking.clear();
-    mockReads.length = 0;
-    httpPostMock.mockReset();
-  });
+/** Seeds a previously cached profile, as written by an earlier launch. */
+const seedCachedAuth = (payload: unknown) => {
+  mockBacking.set(AUTH_STORAGE_KEY, JSON.stringify(payload));
+};
 
-  it('writes the session to the namespaced key', async () => {
-    const store = loadAuthStore();
+/**
+ * Clears in-memory state and the keychain so each test starts signed out.
+ * `reset` mirrors the cleared session back to the keychain, so the backing map
+ * is emptied again afterwards.
+ */
+const resetToSignedOut = async () => {
+  await useAuthStore.getState().reset();
+  mockBacking.clear();
+  mockReads.length = 0;
+  useAuthStore.setState({ isAuthLoading: true });
+};
 
-    store.setState({ user, isSignedIn: true });
+beforeEach(async () => {
+  jest.clearAllMocks();
+  mockBacking.clear();
+  mockReads.length = 0;
+  httpPostMock.mockReset();
+  httpPostMock.mockResolvedValue({ data: user, success: true } as never);
+  await resetToSignedOut();
+});
+
+describe('useAuthStore keychain caching', () => {
+  it('caches the profile under the namespaced key after a successful fetch', async () => {
+    seedToken();
+
+    await useAuthStore.getState().fetchUser();
 
     await waitFor(() => expect(mockBacking.has(AUTH_STORAGE_KEY)).toBe(true));
+    expect(JSON.parse(mockBacking.get(AUTH_STORAGE_KEY) as string)).toEqual({
+      user,
+      isSignedIn: true,
+    });
   });
 
   it('never writes to the legacy unprefixed key', async () => {
-    const store = loadAuthStore();
+    seedToken();
 
-    store.setState({ user, isSignedIn: true });
+    await useAuthStore.getState().fetchUser();
 
     await waitFor(() => expect(mockBacking.has(AUTH_STORAGE_KEY)).toBe(true));
     expect(mockBacking.has(LEGACY_AUTH_STORAGE_KEY)).toBe(false);
   });
 
-  it('persists only the durable subset, with loading forced to false', async () => {
-    const store = loadAuthStore();
+  it('persists only the durable subset, never the loading flag', async () => {
+    seedToken();
+    useAuthStore.setState({ isAuthLoading: true });
 
-    store.setState({ user, isSignedIn: true, isAuthLoading: true });
+    await useAuthStore.getState().fetchUser();
 
     await waitFor(() => expect(mockBacking.has(AUTH_STORAGE_KEY)).toBe(true));
-
-    const persisted = JSON.parse(mockBacking.get(AUTH_STORAGE_KEY) as string).state;
-    expect(Object.keys(persisted).sort()).toEqual(['isAuthLoading', 'isSignedIn', 'user']);
-    expect(persisted.isAuthLoading).toBe(false);
-    expect(persisted.user).toEqual(user);
+    const cached = JSON.parse(mockBacking.get(AUTH_STORAGE_KEY) as string);
+    expect(Object.keys(cached).sort()).toEqual(['isSignedIn', 'user']);
+    expect(cached).not.toHaveProperty('isAuthLoading');
   });
 
-  it('hydrates a previously persisted user from the namespaced key', async () => {
-    mockBacking.set(
-      AUTH_STORAGE_KEY,
-      JSON.stringify({ state: { user, isSignedIn: true, isAuthLoading: false }, version: 1 })
-    );
+  it('reads the cached profile from the namespaced key on hydration', async () => {
+    seedToken();
+    seedCachedAuth({ user, isSignedIn: true });
 
-    const store = loadAuthStore();
+    await useAuthStore.getState()._hydrate();
 
-    await waitFor(() => expect(store.getState().user).toEqual(user));
-    expect(store.getState().isSignedIn).toBe(true);
     expect(mockReads).toContain(AUTH_STORAGE_KEY);
+    expect(useAuthStore.getState().user).toEqual(user);
+    expect(useAuthStore.getState().isSignedIn).toBe(true);
+  });
+
+  it('treats the stored token, not the cached profile, as the session anchor', async () => {
+    // A cached profile with no token must still end signed out — this is what
+    // makes the on-disk format safe to change, since the cache is repairable
+    // from the API while the token is the only thing that keeps a user in.
+    seedCachedAuth({ user, isSignedIn: true });
+
+    await useAuthStore.getState()._hydrate();
+
+    expect(useAuthStore.getState().user).toBeNull();
+    expect(useAuthStore.getState().isSignedIn).toBe(false);
   });
 
   it('ignores a session left behind under the legacy key', async () => {
-    mockBacking.set(
-      LEGACY_AUTH_STORAGE_KEY,
-      JSON.stringify({ state: { user, isSignedIn: true, isAuthLoading: false }, version: 1 })
-    );
+    mockBacking.set(LEGACY_AUTH_STORAGE_KEY, JSON.stringify({ user, isSignedIn: true }));
 
-    const store = loadAuthStore();
+    await useAuthStore.getState()._hydrate();
 
-    // Wait for hydration to read the namespaced key, then prove it never
-    // consulted the legacy one and therefore left the session empty.
-    await waitFor(() => expect(mockReads).toContain(AUTH_STORAGE_KEY));
     expect(mockReads).not.toContain(LEGACY_AUTH_STORAGE_KEY);
-    expect(store.getState().user).toBeNull();
+    expect(useAuthStore.getState().user).toBeNull();
+    expect(useAuthStore.getState().isSignedIn).toBe(false);
+  });
+
+  it('falls back to a signed-out session when the cache is unparseable', async () => {
+    mockBacking.set(AUTH_STORAGE_KEY, 'not-json{{');
+
+    await expect(useAuthStore.getState()._hydrate()).resolves.toBeUndefined();
+
+    expect(useAuthStore.getState().user).toBeNull();
+    expect(useAuthStore.getState().isSignedIn).toBe(false);
+    expect(useAuthStore.getState().isAuthLoading).toBe(false);
+  });
+
+  it('clears the cached profile on reset', async () => {
+    seedToken();
+    await useAuthStore.getState().fetchUser();
+    await waitFor(() => expect(mockBacking.has(AUTH_STORAGE_KEY)).toBe(true));
+
+    await useAuthStore.getState().reset();
+
+    expect(JSON.parse(mockBacking.get(AUTH_STORAGE_KEY) as string)).toEqual({
+      user: null,
+      isSignedIn: false,
+    });
   });
 });
 
 describe('useAuthStore behaviour', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockBacking.clear();
-    mockReads.length = 0;
-    httpPostMock.mockReset();
-  });
+  it('reset clears the session', async () => {
+    useAuthStore.setState({ user, isSignedIn: true });
 
-  it('reset clears the session', () => {
-    const store = loadAuthStore();
+    await useAuthStore.getState().reset();
 
-    store.setState({ user, isSignedIn: true });
-    store.getState().reset();
-
-    expect(store.getState().user).toBeNull();
-    expect(store.getState().isSignedIn).toBe(false);
+    expect(useAuthStore.getState().user).toBeNull();
+    expect(useAuthStore.getState().isSignedIn).toBe(false);
   });
 
   it('fetchUser stores the user returned by the API', async () => {
     seedToken();
     httpPostMock.mockResolvedValue({ data: user, success: true } as never);
-    const store = loadAuthStore();
 
-    await store.getState().fetchUser();
+    await useAuthStore.getState().fetchUser();
 
-    expect(store.getState().user).toEqual(user);
-    expect(store.getState().isSignedIn).toBe(true);
-    expect(store.getState().isAuthLoading).toBe(false);
+    expect(useAuthStore.getState().user).toEqual(user);
+    expect(useAuthStore.getState().isSignedIn).toBe(true);
+    expect(useAuthStore.getState().isAuthLoading).toBe(false);
   });
 
   it('fetchUser resets the session when the API reports failure', async () => {
     seedToken();
     httpPostMock.mockResolvedValue({ data: null, success: false } as never);
-    const store = loadAuthStore();
-    store.setState({ user, isSignedIn: true });
+    useAuthStore.setState({ user, isSignedIn: true });
 
-    await store.getState().fetchUser();
+    await useAuthStore.getState().fetchUser();
 
-    expect(store.getState().user).toBeNull();
-    expect(store.getState().isSignedIn).toBe(false);
+    expect(useAuthStore.getState().user).toBeNull();
+    expect(useAuthStore.getState().isSignedIn).toBe(false);
   });
 
   it('fetchUser leaves the session alone when no token is stored', async () => {
-    const store = loadAuthStore();
-
-    await store.getState().fetchUser();
+    await useAuthStore.getState().fetchUser();
 
     expect(httpPostMock).not.toHaveBeenCalled();
   });
@@ -212,14 +232,13 @@ describe('useAuthStore behaviour', () => {
   it('logout removes both token keys and clears the session', async () => {
     seedToken();
     mockBacking.set('pension.auth.refreshToken', 'refresh-token');
-    const store = loadAuthStore();
-    store.setState({ user, isSignedIn: true });
+    useAuthStore.setState({ user, isSignedIn: true });
 
-    await store.getState().logout();
+    await useAuthStore.getState().logout();
 
     expect(mockBacking.has('pension.auth.accessToken')).toBe(false);
     expect(mockBacking.has('pension.auth.refreshToken')).toBe(false);
-    expect(store.getState().user).toBeNull();
-    expect(store.getState().isSignedIn).toBe(false);
+    expect(useAuthStore.getState().user).toBeNull();
+    expect(useAuthStore.getState().isSignedIn).toBe(false);
   });
 });
