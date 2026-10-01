@@ -2,6 +2,7 @@ import { usePathname, useLocalSearchParams, Href } from 'expo-router';
 import { useSafeNavigation } from '@hooks';
 import React, { useEffect } from 'react';
 import { LoadingScreen } from '../screens';
+import { PAGE_ROUTES } from '@utils/constants';
 
 type Props = {
   children: React.ReactNode;
@@ -78,7 +79,7 @@ export const AuthRedirect = ({
 
     // 2. Non-authenticated user on protected page -> redirect to auth
     if (!isSignedIn && onProtectedPage) {
-      navigate('/auth', 'replace');
+      navigate(PAGE_ROUTES.AUTH.HOME, 'replace');
       return;
     }
 
@@ -92,10 +93,11 @@ export const AuthRedirect = ({
     pathName,
     redirectTo,
     navigate,
+    redirectHref,
   ]);
 
   if (isLoading) {
-    return <LoadingScreen message="Initializing user" />;
+    return <LoadingScreen />;
   }
 
   return <>{children}</>;
