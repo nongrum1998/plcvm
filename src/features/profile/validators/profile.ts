@@ -73,11 +73,7 @@ export const ProfileUpdateSchema = z.object({
   religion_cd: z.string().min(1, 'Religion is required').trim(),
   gender: z.string().min(1, 'Gender is required').trim(),
   comty_cd: z.string('Community is required').min(1, 'Community is required').trim(),
-  marital_cd: z
-    .string('Marital status is required')
-    .trim()
-    .min(1, 'Marital status is required')
-    .trim(),
+  marital_cd: z.string('Marital status is required').min(1, 'Marital status is required').trim(),
 });
 
 /**
