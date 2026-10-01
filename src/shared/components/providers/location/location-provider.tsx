@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useCurrentLocation } from '@hooks';
 import { LoadingScreen } from '../../screens/loading-screen';
+import { PermissionStatus } from 'expo-location';
+import { ErrorScreen } from '@components/screens/error-screen';
+import { openSettings } from 'expo-linking';
 
 /**
  * Mounts the app subtree and eagerly requests foreground location
@@ -43,14 +46,32 @@ import { LoadingScreen } from '../../screens/loading-screen';
  * ```
  */
 export const LocationProvider = ({ children }: { children: React.ReactNode }) => {
-  const { requestPermission, loading } = useCurrentLocation();
+  const { requestPermission, loading, permission, canAskAgain } = useCurrentLocation();
 
   useEffect(() => {
     requestPermission();
   }, [requestPermission]);
 
+  const onRetry = () => {
+    if (canAskAgain) {
+      requestPermission();
+    }
+    openSettings();
+  };
+
   if (loading) {
     return <LoadingScreen />;
+  }
+
+  if (permission !== PermissionStatus.GRANTED) {
+    return (
+      <ErrorScreen
+        title="Location Permission"
+        description="Please allow access to use location to continue"
+        retryLabel={!canAskAgain ? 'Open Settings' : 'Allow Location'}
+        onRetry={onRetry}
+      />
+    );
   }
 
   return <React.Fragment>{children}</React.Fragment>;

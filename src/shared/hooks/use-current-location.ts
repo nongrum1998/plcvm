@@ -100,5 +100,6 @@ export function useCurrentLocation() {
     getCurrentLocation,
     getLocationName,
     getLocation,
+    canAskAgain: Location.PermissionStatus.UNDETERMINED ? false : true,
   };
 }

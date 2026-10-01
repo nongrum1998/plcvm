@@ -17,6 +17,7 @@ import { usePreventScreenCapture } from 'expo-screen-capture';
 import { queryClient } from '@utils/react-query';
 import { GUEST_ONLY_ROUTES, PUBLIC_ROUTES } from '@utils/constants';
 import { useAuthStore } from '@stores/auth.store';
+import { CameraProvider } from './camera';
 
 type Props = {
   children: React.ReactNode;
@@ -37,30 +38,32 @@ export const ProviderWrapper = ({ children }: Props) => {
   usePreventScreenCapture();
   const { isSignedIn, isAuthLoading } = useAuthStore();
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider className="flex-1">
-        <StatusBar style="auto" animated />
-        <RootProvider>
-          <LocationProvider>
-            <GlobalErrorBoundary>
-              <TQueryProvider queryClient={queryClient}>
-                <QueryErrorResetBoundary>
-                  <AuthInitializer>
-                    <AuthRedirect
-                      isSignedIn={isSignedIn}
-                      isLoading={isAuthLoading}
-                      guestOnly={GUEST_ONLY_ROUTES}
-                      publicOnly={PUBLIC_ROUTES}>
-                      {children}
-                      <UpdateModal />
-                    </AuthRedirect>
-                  </AuthInitializer>
-                </QueryErrorResetBoundary>
-              </TQueryProvider>
-            </GlobalErrorBoundary>
-          </LocationProvider>
-        </RootProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <GlobalErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider className="flex-1">
+          <StatusBar style="auto" animated />
+          <RootProvider>
+            <LocationProvider>
+              <CameraProvider>
+                <TQueryProvider queryClient={queryClient}>
+                  <QueryErrorResetBoundary>
+                    <AuthInitializer>
+                      <AuthRedirect
+                        isSignedIn={isSignedIn}
+                        isLoading={isAuthLoading}
+                        guestOnly={GUEST_ONLY_ROUTES}
+                        publicOnly={PUBLIC_ROUTES}>
+                        {children}
+                        <UpdateModal />
+                      </AuthRedirect>
+                    </AuthInitializer>
+                  </QueryErrorResetBoundary>
+                </TQueryProvider>
+              </CameraProvider>
+            </LocationProvider>
+          </RootProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </GlobalErrorBoundary>
   );
 };

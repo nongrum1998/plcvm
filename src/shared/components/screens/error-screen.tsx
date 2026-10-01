@@ -68,7 +68,7 @@ export const ErrorScreen = ({
       </Text>
 
       {onRetry && (
-        <Button onPress={onRetry} size={'lg'} activeOpacity={0.8}>
+        <Button onPress={onRetry} variant={'outline'} size={'lg'} activeOpacity={0.8}>
           {retryLabel}
         </Button>
       )}
