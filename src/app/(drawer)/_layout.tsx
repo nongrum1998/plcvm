@@ -16,7 +16,9 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
   const inset = useSafeAreaInsets();
   const { navigate } = useSafeNavigation();
   const base64Image = user?.photo;
-  const image = `data:image/png;base64,${base64Image}`;
+  const image = base64Image?.startsWith('data:image/png;base64')
+    ? base64Image
+    : `data:image/png;base64,${base64Image}`;
   return (
     <View className="flex-1">
       {/* Header Section */}
