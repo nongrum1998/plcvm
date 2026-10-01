@@ -44,8 +44,8 @@ const LEGACY_AUTH_STORAGE_KEY = 'auth-storage';
 const httpPostMock = jest.mocked(http.post);
 
 const user: UserT = {
-  app_date: null,
-  app_exp: null,
+  app_date: '2024-01-15',
+  app_exp: '2025-01-15',
   bank_accno: '0123456789',
   dob: '1980-01-01',
   gender: 'M',
@@ -61,6 +61,13 @@ const user: UserT = {
   rela: 'SELF',
   trea_code: 'TR-1',
   treasury_name: 'Treasury',
+  pan_dob: '1980-01-01',
+  pan_no: 'ABCDE1234F',
+  height: '170',
+  mobile_no: '9876543210',
+  comty_cd: 'GEN',
+  marital_cd: 'M',
+  email: 'test.pensioner@example.com',
 };
 
 /**
