@@ -386,6 +386,7 @@ POST {{BASE_URL}}/getcodedirectories
 # ------------ Pre-script -------------------
 < {%
    request.variables.set('RAW_BODY', JSON.stringify({
+    email: "1998nongrum@gmail.com",
     comty_cd: "7",
     gender: "M",
     height: "11111",

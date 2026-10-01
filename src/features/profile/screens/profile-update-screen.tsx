@@ -160,6 +160,25 @@ export function ProfileUpdateScreen() {
             }
           />
 
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Field label="Email address" error={errors.email?.message}>
+                <Input
+                  value={value}
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                  placeholder="DD/MM/YYYY"
+                  keyboardType="number-pad"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  error={!!errors.pan_dob?.message}
+                  accessibilityLabel="Date of birth, format day slash month slash year"
+                />
+              </Field>
+            )}
+          />
           {/* Date of Birth */}
           <Controller
             control={control}
