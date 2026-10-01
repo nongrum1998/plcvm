@@ -1,4 +1,4 @@
-import { ALLOW_REGEX } from '@utils';
+import { ALLOW_REGEX, isRealCalendarDate } from '@utils';
 import { z } from 'zod';
 
 /** Matches a date typed as `DD/MM/YYYY` — day, slash, month, slash, four-digit year. */
@@ -16,14 +16,6 @@ const DD_MM_YYYY = /^\d{2}\/\d{2}\/\d{4}$/;
  * @returns `true` when `value` matches the format and names a date that exists
  *   in the Gregorian calendar (leap years included).
  */
-function isRealCalendarDate(value: string): boolean {
-  const [day, month, year] = value.split('/').map(Number);
-  const date = new Date(year, month - 1, day);
-
-  // `Date` silently rolls over out-of-range components (month 13 becomes January
-  // of the next year), so compare the round-tripped parts to catch that.
-  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
-}
 
 /**
  * Zod schema for validating the profile update form.
@@ -50,12 +42,13 @@ export const ProfileUpdateSchema = z.object({
     .string()
     .trim()
     .min(1, 'PAN number is required')
-    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Please enter a valid PAN number'),
+    .max(10, 'PAN number is too long')
+    .regex(ALLOW_REGEX.PAN, 'Please enter a valid PAN number'),
 
   mobile_no: z
     .string('Mobile no is required')
     .trim()
-    .min(1, 'Mobile number is required')
+    .min(10, 'Mobile number is required')
     // `.length` rather than `.max`: the message promises exactly 10 digits, and
     // `.max` alone let 9-digit numbers through.
     .length(10, 'Mobile Number should be exactly 10 in number')

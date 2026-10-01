@@ -72,3 +72,12 @@ export const parseDDMMYYYY = (value: string): Date | null => {
 
   return date;
 };
+
+export function isRealCalendarDate(value: string): boolean {
+  const [day, month, year] = value.split('/').map(Number);
+  const date = new Date(year, month - 1, day);
+
+  // `Date` silently rolls over out-of-range components (month 13 becomes January
+  // of the next year), so compare the round-tripped parts to catch that.
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+}
