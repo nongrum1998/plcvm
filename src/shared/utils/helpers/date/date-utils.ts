@@ -72,9 +72,3 @@ export const parseDDMMYYYY = (value: string): Date | null => {
 
   return date;
 };
-
-export function formatDate(raw: string): string {
-  const digits = raw.replace(/\D/g, '').slice(0, 8);
-
-  return digits.replace(/^(\d{2})(\d)/, '$1/$2').replace(/^(\d{2}\/\d{2})(\d)/, '$1/$2');
-}

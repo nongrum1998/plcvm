@@ -46,10 +46,6 @@ export interface FaceCaptureCameraViewProps {
   onPhaseChange: (phase: CameraPhase) => void;
   /** Called when the user taps the back/cancel action in the camera view. */
   onReset: () => void;
-  /** Called with the captured base64 image when a valid blink is detected
-   *  and compression completes. The parent owns submission logic.
-   *  If `onCaptured` is provided, this is not called automatically. */
-  onSubmit: (base64: string) => void | Promise<void>;
   /** Optional custom capture handler. If provided, this is called instead
    *  of the default flow (which calls onPhaseChange('capturing') then onSubmit).
    *  Use this for custom flows like going to a preview phase first. */
@@ -106,12 +102,9 @@ export function FaceCaptureCameraView({
   phase,
   onPhaseChange,
   onReset,
-  onSubmit,
   onCaptured,
   onError,
   loadingText = 'Submitting...',
-  errorTitle = 'Camera Access not granted',
-  errorDescription = 'Please allow camera access to continue',
   loadingCameraText = 'Loading Camera...',
   loadingCameraDescription,
   requestPermissionOnMount = true,
@@ -136,16 +129,9 @@ export function FaceCaptureCameraView({
    * capturing phase then submits the base64 image.
    */
   const handleCaptured = async (cleanBase64: string) => {
+    onPhaseChange('capturing');
     if (onCaptured) {
       await onCaptured(cleanBase64);
-      return;
-    }
-    onPhaseChange('capturing');
-    try {
-      await onSubmit(cleanBase64);
-    } catch {
-      // Error handling is delegated to the parent via onPhaseChange('error')
-      onPhaseChange('error');
     }
   };
 

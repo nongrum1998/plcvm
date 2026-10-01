@@ -1,6 +1,5 @@
 import { Text, View } from 'react-native';
 import { Button, Ternary } from '@components';
-import { useSafeNavigation } from '@hooks';
 
 /** Props for {@link ProfileUpdateResultView}. */
 export interface ProfileUpdateViewProps {
@@ -9,7 +8,7 @@ export interface ProfileUpdateViewProps {
   /** Backend message to display unchanged. */
   message: string;
   /** Called when the user chooses to return or retry after a failed result. */
-  onBack?: () => void;
+  onBack: () => void;
 }
 
 /**
