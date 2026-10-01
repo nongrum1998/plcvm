@@ -6,6 +6,7 @@ import { FaceCaptureCamera } from './face-capture-camera';
 import { useFaceCapture } from '@hooks/use-face-capture';
 import { FooterImg } from './nic-footer-img';
 import { Container } from '../layout/container';
+import { LoadingScreen } from '@components/screens';
 
 /**
  * Camera phase states for the shared face capture view.
@@ -199,8 +200,7 @@ export function FaceCaptureCameraView({
         (phase === 'capturing' || phase === 'submitting') &&
         (LoadingOverlay ?? (
           <View className="flex-1 items-center justify-center gap-3">
-            <ActivityIndicator size="large" />
-            <Text className="text-base font-medium text-muted-foreground">{loadingText}</Text>
+            <LoadingScreen message="Submitting" />
           </View>
         ))}
     </SafeAreaView>

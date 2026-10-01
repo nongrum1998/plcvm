@@ -32,6 +32,11 @@ export function ProfileUpdateScreen() {
       mutate(payload, { onSuccess: () => setPhase('result') });
     }
   };
+  const onReset = () => {
+    setPhase('form');
+    setCameraPhase('camera');
+    setFormData(null);
+  };
 
   if (phase === 'camera') {
     return (
@@ -39,7 +44,7 @@ export function ProfileUpdateScreen() {
         onSubmit={(data) => onSubmit(data)}
         phase={cameraPhase}
         onPhaseChange={(phase) => setCameraPhase(phase)}
-        onReset={() => setPhase('form')}
+        onReset={onReset}
       />
     );
   }
@@ -64,7 +69,7 @@ export function ProfileUpdateScreen() {
 
         {phase === 'result' && isSuccess && (
           <ProfileUpdateResultView
-            onBack={() => setPhase('form')}
+            onBack={onReset}
             message={data?.message || ''}
             success={data?.success || false}
           />
