@@ -21,7 +21,7 @@ import { ProfileUpdateInput } from '../validators';
  * backend returns the full updated user record.
  */
 export function useUpdateProfile() {
-  const { refresh, user } = useAuthStore();
+  const { user } = useAuthStore();
   return useMutation({
     mutationFn: async (data: ProfileUpdateInput) =>
       http.post(ENDPOINTS.USER.UPDATE_PROFILE, {
@@ -29,9 +29,5 @@ export function useUpdateProfile() {
         member_id: user?.member_id,
         ...data,
       }),
-    onSuccess: (res) => {
-      if (!res.success) return;
-      refresh();
-    },
   });
 }

@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 import { FaceCaptureCamera } from '@components/common/face-capture-camera';
 import { useFaceCapture } from '@hooks/use-face-capture';
-import { Button } from '@components';
+import { Button, LoadingScreen } from '@components';
 import { FooterImg } from '@components/common';
 import { Container } from '@components/layout';
-import { useRegisterPensioner } from '../hooks';
-import { RegisterPensionerInput, RegisterPensionerSchema } from '../validators';
-import { useRegistrationStore } from '../store';
+import { ErrorScreen } from '@components/screens/error-screen';
 
 /**
  * Camera phases of the registration submit step.
@@ -20,7 +18,7 @@ import { useRegistrationStore } from '../store';
  * transition is straight to `submitting` (or `error` on validation/capture
  * failure).
  */
-type RegistrationCameraPhase = 'camera' | 'capturing' | 'submitting' | 'error';
+type CameraPhase = 'camera' | 'capturing' | 'submitting' | 'error';
 
 /**
  * Final step (3) of the pensioner registration wizard: liveness face
@@ -46,15 +44,21 @@ type RegistrationCameraPhase = 'camera' | 'capturing' | 'submitting' | 'error';
  *
  * @returns The rendered registration camera step.
  */
-type RegistrationCameraProps = {
-  onSubmit: (data: RegisterPensionerInput) => void;
+type ProfileUpdateCameraProps = {
+  onSubmit: (data: string) => void;
+  onReset: () => void;
+  phase: CameraPhase;
+  onPhaseChange: (phase: CameraPhase) => void;
 };
 
-export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
-  const { formData, prevStep } = useRegistrationStore();
+export function ProfileUpdateCamera({
+  onSubmit,
+  onPhaseChange,
+  phase,
+  onReset,
+}: ProfileUpdateCameraProps) {
   const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('front');
-  const [phase, setPhase] = useState<RegistrationCameraPhase>('camera');
 
   useEffect(() => {
     if (!hasPermission) requestPermission();
@@ -66,12 +70,8 @@ export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
    * complete, so the capture gate is already released when this runs.
    */
   const handleCaptured = async (cleanBase64: string) => {
-    setPhase('submitting');
-    const parsed = RegisterPensionerSchema.safeParse({ ...formData, image: cleanBase64 });
-    if (!parsed.success) {
-      return;
-    }
-    onSubmit(parsed.data);
+    onPhaseChange('capturing');
+    onSubmit(cleanBase64);
   };
 
   // Shared blink-liveness capture pipeline; inactive outside the camera
@@ -79,18 +79,15 @@ export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
   const capture = useFaceCapture({
     isActive: phase === 'camera',
     onCaptured: handleCaptured,
-    onError: () => setPhase('error'),
+    onError: () => onPhaseChange('error'),
   });
 
   if (!hasPermission || !device) {
     return (
-      <Container>
-        <SafeAreaView className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" />
-          <Text className="mt-4 text-base text-muted-foreground">Loading Camera...</Text>
-          <FooterImg />
-        </SafeAreaView>
-      </Container>
+      <ErrorScreen
+        title="Camera Access not granted"
+        description="Please allow camera access to continue"
+      />
     );
   }
 
@@ -105,7 +102,7 @@ export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
           }}>
           <FaceCaptureCamera
             device={device}
-            onReset={prevStep}
+            onReset={onReset}
             outputs={capture.outputs}
             faces={capture.faces}
             frameWidth={capture.frameSize.width}
@@ -118,7 +115,7 @@ export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
           {/* Back to details — top-left over the live preview; inset below
               the status bar because the camera runs full-bleed */}
           <View className="absolute bottom-5 left-5 right-5">
-            <Button size="lg" onPress={prevStep}>
+            <Button size="lg" onPress={onReset}>
               Back
             </Button>
           </View>
@@ -126,14 +123,7 @@ export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
       )}
 
       {/* Submitting — full-screen loading overlay */}
-      {(phase === 'capturing' || phase === 'submitting') && (
-        <View className="flex-1 items-center justify-center gap-3">
-          <ActivityIndicator size="large" />
-          <Text className="text-base font-medium text-muted-foreground">
-            {phase === 'capturing' ? 'Processing photo...' : 'Submitting registration...'}
-          </Text>
-        </View>
-      )}
+      {(phase === 'capturing' || phase === 'submitting') && <LoadingScreen />}
     </SafeAreaView>
   );
 }
