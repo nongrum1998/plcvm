@@ -57,7 +57,7 @@ export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
    * registration. Called by {@link FaceCaptureCameraView} after capture + compress
    * complete.
    */
-  const handleSubmit = async (cleanBase64: string) => {
+  const handleSubmit = (cleanBase64: string) => {
     setPhase('submitting');
     const parsed = RegisterPensionerSchema.safeParse({ ...formData, image: cleanBase64 });
     if (!parsed.success) {
@@ -72,7 +72,7 @@ export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
       phase={phase}
       onPhaseChange={setPhase}
       onReset={prevStep}
-      onSubmit={handleSubmit}
+      onCaptured={handleSubmit}
       loadingText="Submitting registration..."
       errorTitle="Camera Access not granted"
       errorDescription="Please allow camera access to continue"

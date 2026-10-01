@@ -285,17 +285,10 @@ export function FaceVerificationScreen() {
         {/* Shared camera view for the camera phase */}
         <FaceCaptureCameraView
           phase={cameraPhase}
-          onPhaseChange={(newPhase) => {
-            // Map CameraPhase back to FaceVerificationPhase
-            if (newPhase === 'camera') setPhase('camera');
-            else if (newPhase === 'submitting') setPhase('submitting');
-            else if (newPhase === 'error') setPhase('error');
-          }}
+          onPhaseChange={(newPhase) => setPhase(newPhase)}
           onReset={handleReset}
-          onSubmit={() => {}} // Not used - we use onCaptured instead
           onCaptured={handleCapturedImage}
           onError={handleCaptureError}
-          requestPermissionOnMount={false}
           showLoadingOverlay={true}
           LoadingOverlay={<FaceVerificationLoadingView />}
           loadingText="Processing..."

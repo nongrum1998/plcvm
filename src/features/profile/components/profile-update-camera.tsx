@@ -37,7 +37,7 @@ export function ProfileUpdateCamera({
       phase={phase}
       onPhaseChange={onPhaseChange}
       onReset={onReset}
-      onSubmit={onSubmit}
+      onCaptured={onSubmit}
       loadingText="Submitting..."
       errorTitle="Camera Access not granted"
       errorDescription="Please allow camera access to continue"
