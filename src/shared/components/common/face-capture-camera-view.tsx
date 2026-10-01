@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 import { FaceCaptureCamera } from './face-capture-camera';
 import { useFaceCapture } from '@hooks/use-face-capture';
-import { Container } from '../layout/container';
 import { ErrorScreen, LoadingScreen } from '@components/screens';
 
 /**
@@ -100,6 +99,8 @@ export function FaceCaptureCameraView({
   const device = useCameraDevice('front');
   const isPermissionRequested = useRef(false);
 
+  const showLoading = showLoadingOverlay && (phase === 'capturing' || phase === 'submitting');
+
   useEffect(() => {
     if (requestPermissionOnMount && !hasPermission && !isPermissionRequested.current) {
       isPermissionRequested.current = true;
@@ -142,13 +143,23 @@ export function FaceCaptureCameraView({
   // Camera unavailable / permission denied state
   if (!hasPermission || !device) {
     return (
-      <Container>
-        <ErrorScreen
-          description="Camera Access not granted"
-          title="Please allow camera access to continue"
-          onRetry={requestPermission}
-        />
-      </Container>
+      <ErrorScreen
+        description="Camera Access not granted"
+        title="Please allow camera access to continue"
+        onRetry={requestPermission}
+      />
+    );
+  }
+
+  if (showLoading) {
+    return (
+      <SafeAreaView className="flex-1" edges={['left', 'right']}>
+        {LoadingOverlay ?? (
+          <View className="flex-1 items-center justify-center gap-3">
+            <LoadingScreen message="Submitting" />
+          </View>
+        )}
+      </SafeAreaView>
     );
   }
 
@@ -174,15 +185,6 @@ export function FaceCaptureCameraView({
           />
         </View>
       )}
-
-      {/* Submitting — full-screen loading overlay */}
-      {showLoadingOverlay &&
-        (phase === 'capturing' || phase === 'submitting') &&
-        (LoadingOverlay ?? (
-          <View className="flex-1 items-center justify-center gap-3">
-            <LoadingScreen message="Submitting" />
-          </View>
-        ))}
     </SafeAreaView>
   );
 }
