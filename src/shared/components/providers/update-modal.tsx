@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, Modal, ActivityIndicator } from 'react-native';
 import { useAppUpdateStore } from '@stores/update.store';
-import { isRealDevice } from '@utils';
 import { Button, Icon } from '../ui';
 
 export const UpdateModal: React.FC = () => {
@@ -14,8 +13,6 @@ export const UpdateModal: React.FC = () => {
   useEffect(() => {
     checkAndDownloadUpdate();
   }, [checkAndDownloadUpdate]);
-
-  if (!isRealDevice()) return null;
 
   if (!isUpdateReady && !isDownloading) return null;
 

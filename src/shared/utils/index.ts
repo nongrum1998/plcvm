@@ -18,10 +18,8 @@
  */
 export * from './helpers/cn';
 export * from './helpers/date';
-export * from './helpers/device';
 export * from './helpers/formatters';
 export * from './helpers/linking';
 export * from './helpers/page';
 export * from './helpers/regex-patterns';
-export * from './helpers/url';
 export * from './logger';

@@ -12,6 +12,3 @@ export * from './auth';
 
 // Page header configuration
 export * from './page';
-
-// Tab navigation types
-export * from './tab';
