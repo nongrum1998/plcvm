@@ -37,12 +37,7 @@ export function ProfileUpdateCamera({
       onPhaseChange={onPhaseChange}
       onReset={onReset}
       onCaptured={onSubmit}
-      loadingText="Submitting..."
-      errorTitle="Camera Access not granted"
-      errorDescription="Please allow camera access to continue"
-      loadingCameraText="Loading Camera..."
       showLoadingOverlay={true}
-      showFooterDuringLoading={false}
     />
   );
 }

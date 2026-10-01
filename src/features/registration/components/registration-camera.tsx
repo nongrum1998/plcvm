@@ -73,11 +73,6 @@ export function RegistrationCamera({ onSubmit }: RegistrationCameraProps) {
       onPhaseChange={setPhase}
       onReset={prevStep}
       onCaptured={handleSubmit}
-      loadingText="Submitting registration..."
-      errorTitle="Camera Access not granted"
-      errorDescription="Please allow camera access to continue"
-      loadingCameraText="Loading Camera..."
-      showFooterDuringLoading={true}
     />
   );
 }

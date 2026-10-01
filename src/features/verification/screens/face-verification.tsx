@@ -24,6 +24,7 @@ import type {
 } from '../types';
 import { useDlcStatus } from '@hooks/use-dlc-status';
 import { useAuthStore } from '@stores/auth.store';
+import { LoadingScreen } from '@components';
 
 const CAMERA_PERMISSION_ERROR =
   'Camera access is required to capture your face photo. Please enable camera access in your device settings.';
@@ -180,13 +181,13 @@ export function FaceVerificationScreen() {
       showTechnicalError(CAPTURE_ERROR);
       return;
     }
-
     setDlcDialogOpen(true);
   }, [capturedImageBase64, showTechnicalError]);
 
   const handleConfirmedSubmit = useCallback(async () => {
     if (submissionInFlight.current || isSubmitPending) return;
 
+    setPhase('submitting');
     setDlcDialogOpen(false);
     setResult(null);
     setErrorMsg('');
@@ -279,21 +280,22 @@ export function FaceVerificationScreen() {
   const cameraPhase: CameraPhase =
     phase === 'camera' ? 'camera' : phase === 'submitting' ? 'submitting' : 'camera';
 
+  if (isSubmitPending) return <LoadingScreen message="Please wait" />;
   return (
     <SafeAreaView className="flex-1" edges={['left', 'right']}>
       <View className="flex-1">
         {/* Shared camera view for the camera phase */}
-        <FaceCaptureCameraView
-          phase={cameraPhase}
-          onPhaseChange={(newPhase) => setPhase(newPhase)}
-          onReset={handleReset}
-          onCaptured={handleCapturedImage}
-          onError={handleCaptureError}
-          showLoadingOverlay={true}
-          LoadingOverlay={<FaceVerificationLoadingView />}
-          loadingText="Processing..."
-          showFooterDuringLoading={false}
-        />
+        {phase === 'camera' && (
+          <FaceCaptureCameraView
+            phase={cameraPhase}
+            onPhaseChange={(newPhase) => setPhase(newPhase)}
+            onReset={handleReset}
+            onCaptured={handleCapturedImage}
+            onError={handleCaptureError}
+            showLoadingOverlay={true}
+            LoadingOverlay={<FaceVerificationLoadingView />}
+          />
+        )}
 
         {phase === 'camera' && !device ? (
           <FaceVerificationErrorView
