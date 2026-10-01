@@ -1,11 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthStore } from '@stores/auth.store';
-import { Controller, FormState, useForm } from 'react-hook-form';
-import { ProfileUpdateSchema } from '../validators';
-import { z } from 'zod';
+import { Controller, useForm } from 'react-hook-form';
+import { ProfileUpdateSchema, ProfileUpdateInput } from '../validators';
 import { View, Text } from 'react-native';
 import { CodeDirectories, Input, Button } from '@components';
-import { formatDate } from '@utils';
 
 /** Upper bound on characters the PAN input accepts — the length of a real PAN. */
 const PAN_MAX_LENGTH = 10;
@@ -50,12 +48,19 @@ function Field({ label, error, children }: FieldProps) {
   );
 }
 
-const ProfileSchema = ProfileUpdateSchema.omit({ image: true });
+const formatDate = (value: string) => {
+  const digits = value.replace(/\D/g, '').slice(0, 8);
 
-type ProfileInput = z.infer<typeof ProfileSchema>;
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) {
+    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  }
+
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+};
 
 type ProfileUpdateFormProps = {
-  onSubmit: (data: ProfileInput) => void;
+  onSubmit: (data: ProfileUpdateInput) => void;
   isLoading?: boolean;
   disabled?: boolean;
 };
@@ -71,8 +76,8 @@ export const ProfileUpdateForm = ({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProfileInput>({
-    resolver: zodResolver(ProfileSchema),
+  } = useForm<ProfileUpdateInput>({
+    resolver: zodResolver(ProfileUpdateSchema),
     defaultValues: {
       pan_dob: __DEV__
         ? (user?.pan_dob || user?.dob) ?? '01/01/1990'
@@ -82,10 +87,12 @@ export const ProfileUpdateForm = ({
       height: __DEV__ ? user?.height ?? '170' : user?.height ?? '',
       comty_cd: __DEV__ ? user?.comty_cd ?? '1' : user?.comty_cd ?? '',
       marital_cd: __DEV__ ? user?.marital_cd ?? '1' : user?.marital_cd ?? '',
+      religion_cd: __DEV__ ? '1' : '',
       gender: __DEV__ ? user?.gender ?? 'M' : user?.gender,
       email: __DEV__ ? user?.email ?? 'test@example.com' : user?.email,
     },
   });
+
   return (
     <View className="gap-y-4">
       <Controller
@@ -97,12 +104,12 @@ export const ProfileUpdateForm = ({
               value={value}
               onChangeText={(text) => onChange(text)}
               onBlur={onBlur}
-              placeholder="DD/MM/YYYY"
-              keyboardType="number-pad"
+              placeholder="Enter email address"
+              keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
-              error={!!errors.pan_dob?.message}
-              accessibilityLabel="Date of birth, format day slash month slash year"
+              error={!!errors.email?.message}
+              accessibilityLabel="Email address"
             />
           </Field>
         )}
@@ -206,7 +213,7 @@ export const ProfileUpdateForm = ({
               selectVal={value}
               onSelect={(val) => onChange(val)}
               code="GENDER"
-              error={errors.comty_cd?.message || ''}
+              error={errors.gender?.message || ''}
             />
           </View>
         )}
@@ -229,6 +236,21 @@ export const ProfileUpdateForm = ({
       {/* Marital Status */}
       <Controller
         control={control}
+        name="marital_cd"
+        render={({ field: { onChange, value } }) => (
+          <View>
+            <CodeDirectories
+              selectVal={value}
+              onSelect={(val) => onChange(val)}
+              code="MARITAL"
+              error={errors.marital_cd?.message || ''}
+            />
+          </View>
+        )}
+      />
+      {/* Religion */}
+      <Controller
+        control={control}
         name="religion_cd"
         render={({ field: { onChange, value } }) => (
           <View>
@@ -236,21 +258,7 @@ export const ProfileUpdateForm = ({
               selectVal={value}
               onSelect={(val) => onChange(val)}
               code="RELIGION"
-              error={errors.marital_cd?.message || ''}
-            />
-          </View>
-        )}
-      />
-      <Controller
-        control={control}
-        name="marital_cd"
-        render={({ field: { onChange, value }, fieldState }) => (
-          <View>
-            <CodeDirectories
-              selectVal={value}
-              onSelect={(val) => onChange(val)}
-              code="MARITAL"
-              error={fieldState.error?.message ? fieldState.error.message : ''}
+              error={errors.religion_cd?.message || ''}
             />
           </View>
         )}

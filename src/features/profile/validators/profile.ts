@@ -38,10 +38,8 @@ function isRealCalendarDate(value: string): boolean {
  */
 
 export const ProfileUpdateSchema = z.object({
-  image: z.string('Image is required').min(1, 'Image should be at least 1 in length'),
+  image: z.string('Image is required').min(1, 'Image should be at least 1 in length').optional(),
   email: z.email('Please enter a valid email'),
-  religion_cd: z.string().trim().min(1, 'Religion is required'),
-  gender: z.string().trim().min(1, 'Gender is required'),
   pan_dob: z
     .string()
     .min(1, 'Date of birth is required')
@@ -55,7 +53,7 @@ export const ProfileUpdateSchema = z.object({
     .regex(/^[A-Z]{5}[0-9]{4}[A-Z]$/, 'Please enter a valid PAN number'),
 
   mobile_no: z
-    .string()
+    .string('Mobile no is required')
     .trim()
     .min(1, 'Mobile number is required')
     // `.length` rather than `.max`: the message promises exactly 10 digits, and
@@ -64,7 +62,7 @@ export const ProfileUpdateSchema = z.object({
     .regex(ALLOW_REGEX.NUMERIC_ONLY, 'Please enter a valid 10-digit mobile number'),
 
   height: z
-    .string()
+    .string('Height is required')
     .trim()
     .min(1, 'Height is required')
     .refine(
@@ -72,9 +70,10 @@ export const ProfileUpdateSchema = z.object({
       'Height must be a valid positive number'
     ),
 
-  comty_cd: z.string().trim().min(1, 'Community is required'),
-
-  marital_cd: z.string().trim().min(1, 'Marital status is required'),
+  religion_cd: z.string().min(1, 'Religion is required'),
+  gender: z.string().trim().min(1, 'Gender is required'),
+  comty_cd: z.string('Community is required').min(1, 'Community is required'),
+  marital_cd: z.string('Marital status is required').trim().min(1, 'Marital status is required'),
 });
 
 /**

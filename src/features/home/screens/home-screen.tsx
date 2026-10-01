@@ -39,7 +39,7 @@ export function HomeScreen() {
     : `Your photo was not approved. Please complete your DLC before ${data?.app_exp}.`;
 
   if (isLoading || isFetching) {
-    return <LoadingScreen />;
+    return <LoadingScreen message="Loading Verification Status" />;
   }
 
   return (

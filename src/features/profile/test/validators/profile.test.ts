@@ -5,12 +5,15 @@ import { ProfileUpdateSchema } from '@features/profile/validators/profile';
  * test can override exactly one field and assert on that field in isolation.
  */
 const validPayload = {
+  email: 'test@example.com',
   pan_dob: '25/08/1990',
   pan_no: 'ABCDE1234F',
   mobile_no: '9876543210',
   height: '170',
   comty_cd: 'GEN',
   marital_cd: 'MARRIED',
+  religion_cd: 'HINDU',
+  gender: 'M',
 };
 
 /** Asserts a payload parses, returning the parsed data. */

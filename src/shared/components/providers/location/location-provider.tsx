@@ -59,8 +59,8 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
     openSettings();
   };
 
-  if (loading) {
-    return <LoadingScreen />;
+  if (loading || permission === null) {
+    return <LoadingScreen message="Requesting Location" />;
   }
 
   if (permission !== PermissionStatus.GRANTED) {

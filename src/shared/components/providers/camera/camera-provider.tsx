@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { ErrorScreen } from '@components/screens/error-screen';
 import { useCameraPermission } from 'react-native-vision-camera';
 import { openSettings } from 'expo-linking';
+import { LoadingScreen } from '@components/screens';
 
 export const CameraProvider = ({ children }: { children: React.ReactNode }) => {
   const { requestPermission, status, canRequestPermission } = useCameraPermission();
@@ -18,6 +19,8 @@ export const CameraProvider = ({ children }: { children: React.ReactNode }) => {
     openSettings();
     return;
   };
+
+  if (status === 'not-determined') return <LoadingScreen message="Loading Camera" />;
 
   if (status === 'denied') {
     return (

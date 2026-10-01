@@ -12,11 +12,13 @@ import { ActivityIndicator, Text, View } from 'react-native';
  * @example
  * if (isLoading) return <LoadingScreen />;
  */
-export const LoadingScreen = () => {
+export const LoadingScreen = ({ message = 'Loading' }: { message?: string }) => {
   return (
     <View className={'flex-1 items-center justify-center gap-4'}>
       <ActivityIndicator size="large" className="text-primary" />
-      <Text className="text-lg font-bold uppercase tracking-wider text-primary">Loading</Text>
+      <Text className="text-lg font-bold uppercase tracking-wider text-primary">
+        {message || 'Loading'}
+      </Text>
     </View>
   );
 };

@@ -95,7 +95,7 @@ export const AuthRedirect = ({
   ]);
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen message="Initializing user" />;
   }
 
   return <>{children}</>;

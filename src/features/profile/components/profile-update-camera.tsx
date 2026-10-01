@@ -2,7 +2,6 @@ import {
   FaceCaptureCameraView,
   type CameraPhase,
 } from '@components/common/face-capture-camera-view';
-
 /**
  * Props for {@link ProfileUpdateCamera}.
  */
