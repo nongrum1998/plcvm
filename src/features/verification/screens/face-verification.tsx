@@ -2,7 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
-import { FaceCaptureCamera } from '@components/common/face-capture-camera';
+import {
+  FaceCaptureCameraView,
+  type CameraPhase,
+} from '@components/common/face-capture-camera-view';
 import { useFaceCapture } from '@hooks/use-face-capture';
 import {
   FaceVerificationPhotoPreviewStep,
@@ -57,6 +60,8 @@ function normalizeDeclarationAnswer(value: string | null | undefined): Declarati
  * captured JPEG base64 and declarations remain in memory until submission
  * completes; a failed result or technical retry resets the capture pipeline
  * and returns to the same screen without changing the user's declarations.
+ *
+ * Uses the shared {@link FaceCaptureCameraView} for the camera phase.
  *
  * @returns The active face-verification phase for the current screen.
  */
@@ -123,16 +128,18 @@ export function FaceVerificationScreen() {
     [showTechnicalError]
   );
 
-  const handleCaptureError = useCallback(() => {
-    showTechnicalError(CAPTURE_ERROR);
-  }, [showTechnicalError]);
+  const handleCaptureError = useCallback(
+    (message: string) => {
+      showTechnicalError(message);
+    },
+    [showTechnicalError]
+  );
 
-  const capture = useFaceCapture({
+  const { resetCaptureState } = useFaceCapture({
     isActive: phase === 'camera',
     onCaptured: handleCapturedImage,
     onError: handleCaptureError,
   });
-  const { resetCaptureState } = capture;
 
   const handleScanFace = useCallback(async () => {
     if (scanRequestInFlight.current || submissionInFlight.current) return;
@@ -268,27 +275,32 @@ export function FaceVerificationScreen() {
   const declaration: DlcDeclarationDetails = { nec, nmc };
   const showMarriageQuestion = user?.pclass === 'f';
 
+  // Map FaceVerificationPhase to CameraPhase for the shared component
+  const cameraPhase: CameraPhase =
+    phase === 'camera' ? 'camera' : phase === 'submitting' ? 'submitting' : 'camera';
+
   return (
     <SafeAreaView className="flex-1" edges={['left', 'right']}>
-      <View
-        className="flex-1"
-        onLayout={(event) => {
-          const { width, height } = event.nativeEvent.layout;
-          capture.onLayout({ width, height });
-        }}>
-        {phase === 'camera' && device ? (
-          <FaceCaptureCamera
-            device={device}
-            onReset={handleReset}
-            outputs={capture.outputs}
-            faces={capture.faces}
-            frameWidth={capture.frameSize.width}
-            frameHeight={capture.frameSize.height}
-            viewWidth={capture.layoutSize.width}
-            viewHeight={capture.layoutSize.height}
-            message={capture.message}
-          />
-        ) : null}
+      <View className="flex-1">
+        {/* Shared camera view for the camera phase */}
+        <FaceCaptureCameraView
+          phase={cameraPhase}
+          onPhaseChange={(newPhase) => {
+            // Map CameraPhase back to FaceVerificationPhase
+            if (newPhase === 'camera') setPhase('camera');
+            else if (newPhase === 'submitting') setPhase('submitting');
+            else if (newPhase === 'error') setPhase('error');
+          }}
+          onReset={handleReset}
+          onSubmit={() => {}} // Not used - we use onCaptured instead
+          onCaptured={handleCapturedImage}
+          onError={handleCaptureError}
+          requestPermissionOnMount={false}
+          showLoadingOverlay={true}
+          LoadingOverlay={<FaceVerificationLoadingView />}
+          loadingText="Processing..."
+          showFooterDuringLoading={false}
+        />
 
         {phase === 'camera' && !device ? (
           <FaceVerificationErrorView
@@ -296,8 +308,6 @@ export function FaceVerificationScreen() {
             onTryAgainPress={handleRetake}
           />
         ) : null}
-
-        {(phase === 'capturing' || phase === 'submitting') && <FaceVerificationLoadingView />}
 
         {phase === 'preview' && (
           <FaceVerificationPhotoPreviewStep
