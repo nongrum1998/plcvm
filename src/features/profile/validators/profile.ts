@@ -33,13 +33,13 @@ export const ProfileUpdateSchema = z.object({
   image: z.string('Image is required').min(1, 'Image should be at least 1 in length').optional(),
   email: z.email('Please enter a valid email'),
   pan_dob: z
-    .string()
+    .string('Date of birth is required')
     .min(1, 'Date of birth is required')
     .refine((value) => DD_MM_YYYY.test(value), 'Please enter the date as DD/MM/YYYY')
     .refine(isRealCalendarDate, 'Please enter a valid date of birth'),
 
   pan_no: z
-    .string()
+    .string('PAN number is required')
     .trim()
     .min(1, 'PAN number is required')
     .max(10, 'PAN number is too long')
@@ -63,8 +63,8 @@ export const ProfileUpdateSchema = z.object({
       'Height must be a valid positive number'
     ),
 
-  religion_cd: z.string().min(1, 'Religion is required').trim(),
-  gender: z.string().min(1, 'Gender is required').trim(),
+  religion_cd: z.string('Religion is required').min(1, 'Religion is required').trim(),
+  gender: z.string('Gender is required').min(1, 'Gender is required').trim(),
   comty_cd: z.string('Community is required').min(1, 'Community is required').trim(),
   marital_cd: z.string('Marital status is required').min(1, 'Marital status is required').trim(),
 });
