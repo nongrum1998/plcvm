@@ -23,6 +23,7 @@ import { ProfileUpdateInput } from '../validators';
 export function useUpdateProfile() {
   const { user } = useAuthStore();
   return useMutation({
+    mutationKey: ['current', 'user'],
     mutationFn: async (data: ProfileUpdateInput) =>
       http.post(ENDPOINTS.USER.UPDATE_PROFILE, {
         ppo_id: user?.ppo_id,
