@@ -49,8 +49,14 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
   const { requestPermission, loading, permission, canAskAgain } = useCurrentLocation();
 
   useEffect(() => {
-    requestPermission();
-  }, [requestPermission]);
+    async function getPermission() {
+      if (permission === PermissionStatus.UNDETERMINED) {
+        await requestPermission();
+      }
+    }
+    getPermission();
+    return () => {};
+  }, [requestPermission, permission]);
 
   const onRetry = () => {
     if (canAskAgain) {
@@ -58,6 +64,10 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
     }
     openSettings();
   };
+
+  if (permission === PermissionStatus.UNDETERMINED) {
+    return <LoadingScreen message="Requesting Location" />;
+  }
 
   if (loading || permission === null) {
     return <LoadingScreen message="Requesting Location" />;
