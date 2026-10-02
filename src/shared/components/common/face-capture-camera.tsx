@@ -69,7 +69,7 @@ export function FaceCaptureCamera({
           <Text className="text-center text-lg font-bold text-white">{message}</Text>
         </View>
         <View>
-          <Button variant={'secondary'} size={'lg'} onPress={onReset}>
+          <Button variant={'secondary'} size={'default'} onPress={onReset}>
             Cancel
           </Button>
         </View>

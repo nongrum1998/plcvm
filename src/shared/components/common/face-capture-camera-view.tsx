@@ -74,7 +74,8 @@ export interface FaceCaptureCameraViewProps {
  * and phase transitions.
  *
  * Key responsibilities:
- * - Requests camera permission on mount (unless requestPermissionOnMount is false)
+ * - Requests camera permission on mount, but only while the status is still
+ *   `not-determined` (unless requestPermissionOnMount is false)
  * - Selects the front camera device
  * - Manages the `useFaceCapture` hook lifecycle
  * - Measures layout dimensions for face overlay scaling
@@ -95,18 +96,20 @@ export function FaceCaptureCameraView({
   showLoadingOverlay = true,
   LoadingOverlay,
 }: FaceCaptureCameraViewProps) {
-  const { hasPermission, requestPermission } = useCameraPermission();
+  const { hasPermission, status, requestPermission } = useCameraPermission();
   const device = useCameraDevice('front');
   const isPermissionRequested = useRef(false);
 
   const showLoading = showLoadingOverlay && (phase === 'capturing' || phase === 'submitting');
 
   useEffect(() => {
-    if (requestPermissionOnMount && !hasPermission && !isPermissionRequested.current) {
-      isPermissionRequested.current = true;
-      requestPermission();
+    if (status === 'not-determined') {
+      if (requestPermissionOnMount && !hasPermission && !isPermissionRequested.current) {
+        isPermissionRequested.current = true;
+        requestPermission();
+      }
     }
-  }, [hasPermission, requestPermission, requestPermissionOnMount]);
+  }, [hasPermission, status, requestPermission, requestPermissionOnMount]);
 
   /**
    * Called by {@link useFaceCapture} after capture + compress complete.
@@ -154,11 +157,7 @@ export function FaceCaptureCameraView({
   if (showLoading) {
     return (
       <SafeAreaView className="flex-1" edges={['left', 'right']}>
-        {LoadingOverlay ?? (
-          <View className="flex-1 items-center justify-center gap-3">
-            <LoadingScreen message="Submitting" />
-          </View>
-        )}
+        {LoadingOverlay ?? <LoadingScreen message="Submitting" />}
       </SafeAreaView>
     );
   }

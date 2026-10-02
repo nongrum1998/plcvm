@@ -6,16 +6,26 @@ import { ErrorScreen } from '@components/screens/error-screen';
 import { openSettings } from 'expo-linking';
 
 /**
- * Mounts the app subtree and eagerly requests foreground location
- * permission.
+ * Mount gate that holds the app subtree until foreground location permission
+ * is resolved.
  *
  * On mount the provider calls `requestPermission()` from
- * {@link useCurrentLocation}, which triggers the native Expo permission
- * prompt exactly once per mount and caches the resulting
- * `Location.PermissionStatus` in the OS permission store. `children`
- * are rendered unchanged via a `React.Fragment` — this component adds
- * no DOM and no layout of its own, so it can wrap the tree at any depth
- * without affecting styles or accessibility trees.
+ * {@link useCurrentLocation}, but only while `permission` is still
+ * `UNDETERMINED` or `null`. Re-requesting an already-decided permission is a
+ * no-op on both platforms and can re-surface the OS prompt, so the request is
+ * gated on the status rather than fired unconditionally on every mount. The
+ * resulting `Location.PermissionStatus` is cached by the OS permission store.
+ *
+ * Renders {@link LoadingScreen} until permission resolves — `UNDETERMINED`,
+ * `null`, or an in-flight `loading` — so `children` never mount before the
+ * prompt is answered, then:
+ *
+ * - {@link ErrorScreen} with a retry handler that re-requests while the OS
+ *   still allows it and otherwise deep-links to system Settings, when
+ *   permission is anything other than `GRANTED`,
+ * - otherwise `children` unchanged via a `React.Fragment` — this component
+ *   adds no DOM and no layout of its own, so it can wrap the tree at any depth
+ *   without affecting styles or accessibility trees.
  *
  * Note that this is a side-effect-only mount gate, **not** a context
  * provider: `useCurrentLocation` keeps `permission`, `location` and
@@ -30,7 +40,8 @@ import { openSettings } from 'expo-linking';
  * @param props - Component props.
  * @param props.children - Subtree to render. Rendered as-is with no
  *   wrapping element.
- * @returns A React element rendering `props.children` unchanged.
+ * @returns A React element rendering `props.children` unchanged, or a
+ *   loading/error screen while permission is unresolved.
  * @example
  * ```tsx
  * export const App = () => (
@@ -47,10 +58,12 @@ import { openSettings } from 'expo-linking';
  */
 export const LocationProvider = ({ children }: { children: React.ReactNode }) => {
   const { requestPermission, loading, permission, canAskAgain } = useCurrentLocation();
+  const showLoadingScreen: boolean =
+    permission === PermissionStatus.UNDETERMINED || permission === null || loading;
 
   useEffect(() => {
     async function getPermission() {
-      if (permission === PermissionStatus.UNDETERMINED) {
+      if (permission === PermissionStatus.UNDETERMINED || permission === null) {
         await requestPermission();
       }
     }
@@ -65,12 +78,8 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
     openSettings();
   };
 
-  if (permission === PermissionStatus.UNDETERMINED) {
-    return <LoadingScreen message="Requesting Location" />;
-  }
-
-  if (loading || permission === null) {
-    return <LoadingScreen message="Requesting Location" />;
+  if (showLoadingScreen) {
+    return <LoadingScreen />;
   }
 
   if (permission !== PermissionStatus.GRANTED) {
