@@ -7,12 +7,58 @@ import { PAGE_ROUTES } from '@utils/constants';
 import { ProfileFieldRow } from '../components';
 
 /**
+ * Expands a stored gender code into the human-readable label shown in the
+ * field list.
+ *
+ * The parameter is declared `'M' | 'F'` — the codes pension records use — but
+ * the `'Other'` fallback is a real runtime guard rather than dead code:
+ * `UserT.gender` is typed `string`, so the call site reaches this helper
+ * through an `as any` cast. An unexpected or empty code therefore falls
+ * through to `'Other'` instead of rendering a raw code to the user.
+ *
+ * @param value - Stored gender code, expected to be `'M'` or `'F'`.
+ * @returns `'Male'` for `'M'`, `'Female'` for `'F'`, and `'Other'` for any
+ *   other value.
+ */
+function getFullGenderLabel(value: 'M' | 'F') {
+  return value === 'M' ? 'Male' : value === 'F' ? 'Female' : 'Other';
+}
+
+/**
+ * A single label/value pair rendered by {@link ProfileFieldRow} in the
+ * profile field list.
+ */
+type ProfileFieldT = {
+  /** Field caption, e.g. `Mobile No.`. Doubles as the React list key. */
+  label: string;
+  /** Display text; may be a fallback glyph when the field is empty. */
+  value: string;
+};
+
+/**
  * Read-only profile display screen.
  *
- * Renders the signed-in user's data sourced from `useAuthStore.user` (type
- * `UserT`), including an avatar, and a button that pushes to the
- * `PAGE_ROUTES.PROFILE_UPDATE` route to edit the profile. When no user is
- * present, a fallback message is shown.
+ * Renders the signed-in user's record from `useAuthStore.user` (`UserT`) as a
+ * list of {@link ProfileFieldRow} entries beneath a "Personal info" header,
+ * plus a button that navigates to `PAGE_ROUTES.PROFILE.UPDATE` for editing.
+ *
+ * Pull-to-refresh is wired to the auth store rather than a local fetch: the
+ * `RefreshControl` calls `refresh` (which re-fetches the profile) and tracks
+ * `isAuthLoading`. The store deliberately never persists that flag, so the
+ * spinner reflects the in-flight request on every mount instead of restoring a
+ * cached `true`.
+ *
+ * Empty-value handling is preserved rather than normalised, and is
+ * inconsistent across the screen: `email` and `treasury_name` fall back to an
+ * em dash (`—`) in the field list via `||`, while the header renders
+ * `treasury_name` with a plain hyphen (`-`) via `??`. The remaining fields
+ * (`pname`, `ppo_no`, `mobile_no`, `dob`) have no fallback and render blank
+ * when unset.
+ *
+ * When `user` is `null` — before the auth store finishes hydrating, or after
+ * sign-out — this renders only a "No profile data available." message.
+ *
+ * @returns The profile screen, or the no-data fallback when no user is loaded.
  */
 export function ProfileScreen() {
   const { navigate } = useSafeNavigation();
@@ -30,16 +76,13 @@ export function ProfileScreen() {
     );
   }
 
-  const fields: { label: string; value: string }[] = [
+  const fields: ProfileFieldT[] = [
     { label: 'Email', value: user.email || '—' },
     { label: 'Name', value: user.pname },
     { label: 'Username', value: user.ppo_no },
     { label: 'Mobile No.', value: user.mobile_no },
     { label: 'Date of birth', value: user.dob },
-    {
-      label: 'Gender',
-      value: user.gender === 'M' ? 'Male' : user.gender === 'F' ? 'Female' : 'Other',
-    },
+    { label: 'Gender', value: getFullGenderLabel(user.gender as any) },
     { label: 'Treasury', value: user.treasury_name || '—' },
   ];
 

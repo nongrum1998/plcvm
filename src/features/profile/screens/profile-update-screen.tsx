@@ -2,19 +2,58 @@ import { View, Text } from 'react-native';
 import { Container } from '@components/layout';
 import { useUpdateProfile } from '../hooks/use-update-profile';
 import { ProfileUpdateForm } from '../components';
+import type { CameraPhase } from '@components/common/face-capture-camera-view';
 import { ProfileUpdateCamera } from '../components/profile-update-camera';
 import { useState } from 'react';
 import { ProfileUpdateInput } from '../validators';
 import { ProfileUpdateResultView } from '../components/profile-update-result';
 
-type CameraPhase = 'camera' | 'capturing' | 'submitting' | 'error';
+/**
+ * The three top-level steps of the profile update flow.
+ *
+ * - `form` — the editable form is visible.
+ * - `camera` — face capture must complete before anything can be submitted;
+ *   the form is unmounted and its values are held in local state.
+ * - `result` — the mutation settled and the envelope-driven result card shows.
+ */
+type ProfileUpdatePhaseT = 'result' | 'camera' | 'form';
 
-type PhaseT = 'result' | 'camera' | 'form';
-
+/**
+ * Profile update screen: a three-step form → face capture → result flow.
+ *
+ * Step 1 (`form`) renders {@link ProfileUpdateForm}, whose zod resolver
+ * (`ProfileUpdateSchema`) validates the input before `onSubmitForm` runs. Valid
+ * values are stashed in local state and the phase advances to `camera`.
+ *
+ * Step 2 (`camera`) renders {@link ProfileUpdateCamera} and owns a second,
+ * nested {@link CameraPhase} state machine (`camera` | `capturing` |
+ * `submitting` | `error`) driven by `FaceCaptureCameraView`. Face capture is a
+ * hard interlock: `onSubmit` only fires the mutation once a base64 image
+ * arrives, and it merges that image into the stashed form values, so there is
+ * no path that submits the profile without a capture.
+ *
+ * Step 3 (`result`) renders {@link ProfileUpdateResultView}, which selects
+ * `SuccessStatusCard` or `RejectStatusCard` from the envelope's `success` flag.
+ *
+ * Failure handling is worth noting: `http.post` never rejects, so react-query's
+ * `isSuccess` means only that the request completed — not that the update was
+ * accepted. A 404 or 500 therefore still advances to `result` and renders as a
+ * rejection via `data.success`, which is the intended behaviour. `onReset`
+ * clears the phase, the camera phase and the stashed values, and backs both
+ * the result card's "Go Back"/"Try Again" and the camera's own reset.
+ *
+ * The result card renders inside the same `Container` as the form, so the
+ * "Account / Update Profile" header stays visible across all three phases. The
+ * form itself is mounted only in the `form` phase, which means its `isPending`
+ * and `disabled` props are effectively always `false` while it is on screen —
+ * the mutation runs during the `camera` phase.
+ *
+ * @returns The profile update screen for the current phase.
+ */
 export function ProfileUpdateScreen() {
   const { isPending, mutate, data, isSuccess } = useUpdateProfile();
   const [formData, setFormData] = useState<Omit<ProfileUpdateInput, 'image'> | null>(null);
-  const [phase, setPhase] = useState<PhaseT>('form');
+  const [phase, setPhase] = useState<ProfileUpdatePhaseT>('form');
   const [cameraPhase, setCameraPhase] = useState<CameraPhase>('camera');
 
   const onSubmitForm = (data: Omit<ProfileUpdateInput, 'image'>) => {
@@ -23,8 +62,8 @@ export function ProfileUpdateScreen() {
   };
 
   const onSubmit = (base64: string) => {
+    setCameraPhase('submitting');
     if (phase === 'camera' && base64 && formData) {
-      setCameraPhase('submitting');
       const payload = {
         ...formData,
         image: base64,
@@ -32,6 +71,7 @@ export function ProfileUpdateScreen() {
       mutate(payload, { onSuccess: () => setPhase('result') });
     }
   };
+
   const onReset = () => {
     setPhase('form');
     setCameraPhase('camera');
@@ -77,7 +117,7 @@ export function ProfileUpdateScreen() {
 
         {phase === 'form' && (
           <View className="gap-4 rounded-md border border-gray-200/80 bg-card p-5">
-            {/* API Error */}
+            {/* Form — mounted only in the `form` phase */}
             <ProfileUpdateForm
               onSubmit={(v) => onSubmitForm(v)}
               isLoading={isPending}
