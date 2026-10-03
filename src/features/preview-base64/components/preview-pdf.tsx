@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { useSafeNavigation } from '@hooks';
 import { logger } from '@utils';
-import { EmptyScreen } from './empty-screen';
+import { EmptyScreen } from '@components';
 
 type PreviewPDFProps = {
   base64: string;

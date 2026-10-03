@@ -5,6 +5,4 @@ export * from './error-screen';
 export * from './forbidden-screen';
 export * from './loading-screen';
 export * from './not-found';
-export * from './pdf-preview';
-export * from './preview-pdf';
 export * from './under-development';
