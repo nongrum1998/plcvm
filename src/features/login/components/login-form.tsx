@@ -3,12 +3,13 @@ import { View, Text, Pressable } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { LoginInput, LoginSchema } from '../validators';
+import { LoginInput, LoginSchema } from '../validators/login';
 import { useLogin } from '../hooks/use-login';
 import { Input } from '@components/ui/input';
-import { Button, Icon } from '@components';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
 import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
-import { useNetworkStatus } from '@hooks';
+import { useNetworkStatus } from '@hooks/use-network-status';
 
 const defaultValues = {
   // DEV-ONLY convenience prefill. EXPO_PUBLIC_PPO_NO is compiled into the JS

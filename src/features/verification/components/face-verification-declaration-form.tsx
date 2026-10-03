@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Button } from '@components';
-import { Container } from '@components/layout';
-import { FooterImg } from '@components/common';
+import { Button } from '@components/ui/button';
+import { Container } from '@components/layout/container';
+import { FooterImg } from '@components/common/nic-footer-img';
 import { useAuthStore } from '@stores/auth.store';
-import type { DeclarationAnswer } from '../types';
+import type { DeclarationAnswer } from '@features/verification/types/face-verification';
 
 /** Props for {@link FaceVerificationDeclarationForm}. */
 export interface FaceVerificationDeclarationFormProps {

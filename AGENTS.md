@@ -34,8 +34,8 @@ Metro's own alias resolution, which `tsc` does not.
   redirects). Files here map directly to routes — no central nav config.
 - `src/features/<feature>/` — feature slices: `components/`, `hooks/`,
   `screens/`, `store/` (zustand), `types/`, `utils/constants/`,
-  `validators/` (zod). Each folder has a barrel `index.ts`; import through the
-  barrel, never deep paths.
+  `validators/` (zod). These folders have no barrel `index.ts`; import the
+  concrete file (e.g. `@features/login/validators/login`).
 - `src/shared/` — cross-cutting, one directory per concern:
   `api/` (axios factory + response handling), `components/` (`ui`, `layout`,
   `common`, `screens`, `providers`), `config/`, `hooks/`, `lib/encryption`,
@@ -49,21 +49,25 @@ Metro's own alias resolution, which `tsc` does not.
 
 ## Conventions
 
-- Use tsconfig path aliases. Each has both a bare form (a barrel) and a
-  wildcard form: `@api`, `@api/*`, `@assets/*`, `@components`, `@components/*`,
-  `@config`, `@features/*`, `@hooks`, `@hooks/*`, `@lib`, `@lib/*`,
-  `@sharedTypes`, `@sharedTypes/*`, `@stores/*`, `@styles/*`,
-  `@utils`, `@utils/*`, `@validation/*`. Avoid relative imports across slices.
-- **Inside `src/shared/components/`, import the specific sub-barrel** (`../ui`,
-  `../common`, `../screens`), never the top-level `@components` barrel. The
-  barrel re-exports every component, so a file inside the tree importing it
-  creates a cycle. This is why `common/auth-redirect.tsx` imports
-  `../screens` rather than `@components`.
-- **Keep `src/shared/utils/index.ts` free of side effects.** It is imported
-  from ~30 files, including code that runs under Jest with no native runtime.
-  Modules that pull in native APIs (`helpers/save-base64-pdf` →
-  `expo-file-system`/`expo-sharing`) or the configured HTTP client must stay
-  behind their own subpath.
+- Use tsconfig path aliases, and always import the **concrete file**, never a
+  re-export barrel: `@api` (the one remaining bare alias — it holds the real
+  `createApi` implementation), plus the wildcard forms `@api/*`, `@assets/*`,
+  `@components/*`, `@config/*`, `@features/*`, `@hooks/*`, `@lib/*`,
+  `@sharedTypes/*`, `@stores/*`, `@styles/*`, `@utils/*`, `@validation/*`.
+  Avoid relative imports across slices. There is no bare `@components`,
+  `@config`, `@hooks`, `@lib`, `@sharedTypes` or `@utils` alias — those barrels
+  were deleted; add the explicit file to the wildcard path instead
+  (e.g. `@components/ui/button`, not `@components`).
+- **Inside `src/shared/components/`, import the specific sibling file**
+  (`../ui/button`, `../common/ternary`, `../screens/error-screen`), not a
+  directory. The top-level `@components` barrel is gone, and reintroducing a
+  directory-level barrel would create an import cycle, since a barrel
+  re-exporting the tree it lives in imports itself.
+- **Keep native-API and configured-HTTP modules behind their own subpath.**
+  Code that runs under Jest has no native runtime, so anything pulling in
+  `expo-file-system`/`expo-sharing`/`expo-sharing` (e.g.
+  `helpers/save-base64-pdf`) or the configured axios client must be imported
+  directly (`@utils/http/client`), never swept into a shared barrel.
 - Styling: NativeWind 4 (Tailwind) via `className`. Keep `babel.config.js`
   intact — `react-native-worklets/plugin` is required by reanimated/worklets,
   and the `nativewind` jsx import source.

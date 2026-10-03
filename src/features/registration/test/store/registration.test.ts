@@ -1,5 +1,5 @@
 import { act } from '@testing-library/react-native';
-import { useRegistrationStore } from '@features/registration/store';
+import { useRegistrationStore } from '@features/registration/store/registration';
 
 describe('useRegistrationStore', () => {
   beforeEach(() => {

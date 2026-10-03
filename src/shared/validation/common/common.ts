@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { PAGE_SIZE } from '@utils/constants/common';
-import { ALLOW_REGEX } from '@utils';
+import { ALLOW_REGEX } from '@utils/helpers/regex-patterns/regex-patterns';
 
 export const uuidValidation = z.uuid('Invalid ID');
 

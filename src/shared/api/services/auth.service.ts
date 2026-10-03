@@ -1,11 +1,11 @@
 import type { AxiosInstance } from 'axios';
-import {
+import type {
   LoginRequest,
   LoginResponse,
   LogoutRequest,
   LogoutResponse,
   UserResponse,
-} from '@sharedTypes';
+} from '@sharedTypes/api/auth';
 
 export function createAuthService(client: AxiosInstance) {
   return {

@@ -1,8 +1,8 @@
 import { Text, Image, View } from 'react-native';
-import { Button } from '@components';
-import { Container } from '@components/layout';
-import { FooterImg } from '@components/common';
-import type { DlcDeclarationDetails } from '../types';
+import { Button } from '@components/ui/button';
+import { Container } from '@components/layout/container';
+import { FooterImg } from '@components/common/nic-footer-img';
+import type { DlcDeclarationDetails } from '@features/verification/types/face-verification';
 
 /** Props for {@link FaceVerificationPhotoPreviewStep}. */
 export interface FaceVerificationPhotoPreviewStepProps {

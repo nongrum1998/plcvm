@@ -8,7 +8,7 @@ import {
   Text,
 } from 'react-native';
 import { Skeleton } from '@components/ui/skeleton';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 interface PaginatedListProps<T> extends Omit<FlatListProps<T>, 'data'> {
   /**

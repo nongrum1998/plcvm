@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView, Edge } from 'react-native-safe-area-context';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 interface KeyboardSafeViewProps {
   children: React.ReactNode;

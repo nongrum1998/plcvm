@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { View, Text } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 /**
  * Renders a slim, full-width connectivity banner that appears only while the

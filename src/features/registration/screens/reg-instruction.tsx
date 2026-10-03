@@ -1,13 +1,14 @@
-import { useSafeNavigation } from '@hooks';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 import { Text, View } from 'react-native';
-import { Button, Icon } from '@components';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FooterImg } from '@components/common/nic-footer-img';
 import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
 import { PAGE_ROUTES } from '@utils/constants/routes';
 import * as Linking from 'expo-linking';
-import { APP_LINKS } from '@utils/constants';
-import { Container } from '@components/layout';
+import { APP_LINKS } from '@utils/constants/app-link';
+import { Container } from '@components/layout/container';
 /**
  * Registration guide screen shown before the wizard.
  *

@@ -1,7 +1,7 @@
 import { Text } from 'react-native';
-import { useSafeNavigation } from '@hooks';
-import { Button } from '../ui';
-import { Container } from '../layout';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
+import { Button } from '../ui/button';
+import { Container } from '../layout/container';
 
 interface UnderDevelopmentProps {
   title?: string;

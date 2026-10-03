@@ -1,8 +1,8 @@
-import { LoginT } from '@sharedTypes/auth';
+import { LoginT } from '@sharedTypes/auth/login';
 import { useMutation } from '@tanstack/react-query';
 import { ENDPOINTS } from '@utils/constants/endpoints';
-import { http } from '@utils/http';
-import { LoginInput } from '../validators';
+import { http } from '@utils/http/client';
+import { LoginInput } from '../validators/login';
 import { useAuthStore } from '@stores/auth.store';
 
 export function useLogin() {

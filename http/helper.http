@@ -57,16 +57,25 @@ Content-Type: application/json
 ### ============================================================
 
 ### Create Echo
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+     username: request.environment.get('PPO_NO'),
+     password: request.environment.get('FORMAT_PASSWORD')
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
 POST {{baseUrl}}/api/echo
 Content-Type: application/json
 
 {
   "url": "/user",
   "status_code": 200,
-  "data": "gAAAAABqpr31DgSvrhJl5imrarrh8cv2oFNAG6Pumdtu-x-PFyTf6JY3fUMGOktoJm6oCTWvODjh_c_2C4NNjVArE-nyNqiL4KiPhH8fCPZOXirZ1gcO_uvZdnC_qTGVabpMvruZ7tNYIkn43KTXowbV_UWmaX6hvOXxc9sq9Km2ldUlijLIwPDuSaHpvpLlM4Mn963tRwiB7uEnly73MwHuYqlmvJibHMYm86eeXiiS1k5Br8HLVdkrpx-0p6pGmhwoO_oKsIxPSzfX5xnCTCo_Km8YkHc0xodSXhS-LcQd6SjIKc5BAcyYVRbAAhBth0UuyNbnLktOaihhzKZBhyE7RN2_i1-G4_6f0IuutvXHAbIM4yJjNUAFYy_3_0ESQGaySdnzwnUH6t1rxAQbT1chFylwn1jWj8rSrlEFhezTikCxycoroZJzdF9_M2pYc0-ubTCYH41L4ght2cPUeiEYJ2u_nNA4oK3CfxDP7sdvarvU9skzPRVkf_fMUihgvwmRD5WkeoYiXcjLmIFzzHskfYCYkoZJxbbd5A4xA7KQiDMPjQgELx1gzqfkS3wk23V8tEZR-4IZsz22zUw6csC91B3lfjWkC3Yd9LTA9iH0fKQPm0vttkKJutYpeg0tTpeVB87iKjPYAOG21Er1OrFpIHsqAe631SFmxGozXgG6cumBngGXcZOM1cT5gePM9uoUh5RzZMXdwhivrw9Hia-TEhVznMoUecb--m-c9vFvnVkim_vvdrQ="
+  "data": "{{ENC_PAYLOAD}}"
 }
 
 ### Get Echo
+
 GET {{baseUrl}}/api/echo/user
 
 # ------------ Post-script -------------------

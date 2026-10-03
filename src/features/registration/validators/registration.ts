@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { passwordValidation, ppoNoValidation } from '@validation/common';
+import { passwordValidation, ppoNoValidation } from '@validation/common/common';
 import { ZodIssueCode } from 'zod/v3';
-import { isFutureDate, isRealCalendarDate } from '@utils';
+import { isFutureDate, isRealCalendarDate } from '@utils/helpers/date/date-utils';
 
 export const RegistrationStatusSchema = z.object({
   ppo_no: ppoNoValidation('PPO Number'),

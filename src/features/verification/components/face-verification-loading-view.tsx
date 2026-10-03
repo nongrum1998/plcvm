@@ -1,5 +1,5 @@
-import { FooterImg } from '@components/common';
-import { LoadingScreen } from '@components';
+import { FooterImg } from '@components/common/nic-footer-img';
+import { LoadingScreen } from '@components/screens/loading-screen';
 import { View } from 'react-native';
 
 /**

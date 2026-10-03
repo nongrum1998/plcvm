@@ -18,10 +18,10 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 import { Button } from './button';
 import { Icon } from './icon';
-import { Ternary } from '../common';
+import { Ternary } from '../common/ternary';
 
 /**
  * A single option shape for the {@link SelectSheet} component.

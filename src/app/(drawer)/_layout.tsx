@@ -6,10 +6,11 @@ import {
   DrawerItem,
   DrawerContentComponentProps,
 } from 'expo-router/drawer';
-import { Button, Icon } from '@components';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
 import { useAuthStore } from '@stores/auth.store';
-import { PAGE_ROUTES } from '@utils/constants';
-import { useSafeNavigation } from '@hooks';
+import { PAGE_ROUTES } from '@utils/constants/routes';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const { user, logout } = useAuthStore();

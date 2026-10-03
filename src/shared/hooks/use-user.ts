@@ -1,7 +1,7 @@
 import { useAuthStore } from '@stores/auth.store';
 import { useQuery } from '@tanstack/react-query';
-import { ENDPOINTS } from '@utils/constants';
-import { http } from '@utils/http';
+import { ENDPOINTS } from '@utils/constants/endpoints';
+import { http } from '@utils/http/client';
 
 export function useUser<T>() {
   const { isSignedIn } = useAuthStore();

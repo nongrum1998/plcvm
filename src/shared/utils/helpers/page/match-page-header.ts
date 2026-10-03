@@ -1,5 +1,4 @@
-import type { PageHeaderConfig, PageHeader } from '@sharedTypes';
-
+import type { PageHeaderConfig, PageHeader } from '@sharedTypes/page/header';
 /**
  * Matches a route path against the `PAGE_HEADERS` configuration registry.
  *

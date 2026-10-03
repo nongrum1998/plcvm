@@ -45,15 +45,18 @@ describe('ProfileUpdateSchema - whole payload', () => {
     expect(expectValid(validPayload)).toEqual(validPayload);
   });
 
-  it('strips unknown keys, leaving only the six contract fields', () => {
+  it('strips unknown keys, leaving only the contract fields', () => {
     const parsed = expectValid({ ...validPayload, name: 'Ram', organization: 'NPS' });
     expect(Object.keys(parsed).sort()).toEqual([
       'comty_cd',
+      'email',
+      'gender',
       'height',
       'marital_cd',
       'mobile_no',
       'pan_dob',
       'pan_no',
+      'religion_cd',
     ]);
   });
 });

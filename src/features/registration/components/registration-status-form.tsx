@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
-import { RegistrationStatusInput, RegistrationStatusSchema } from '../validators';
+import { RegistrationStatusInput, RegistrationStatusSchema } from '../validators/registration';
 import { View, Text } from 'react-native';
-import { Button, Icon } from '@components';
-import { useCheckPPO } from '../hooks';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
+import { useCheckPPO } from '../hooks/use-check-ppo';
 import { Input } from '@components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 const defaultValues = {
   // DEV-ONLY prefill; EXPO_PUBLIC_PPO_NO inlines into the bundle at build time.

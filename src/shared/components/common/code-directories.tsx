@@ -1,6 +1,6 @@
-import { useCodeDirectories } from '@hooks';
-import { CODE_TYPE } from '@utils/constants';
-import { SelectSheet } from '@components/ui';
+import { useCodeDirectories } from '@hooks/use-code-directories';
+import { CODE_TYPE } from '@utils/constants/code-directories';
+import { SelectSheet } from '@components/ui/select-sheet';
 
 type CodeTypeT = keyof typeof CODE_TYPE;
 

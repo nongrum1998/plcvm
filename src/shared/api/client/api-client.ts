@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from 'axios';
-import { ApiClientConfig } from '@sharedTypes';
+import type { ApiClientConfig } from '@sharedTypes/api/client';
 
 export function createApiClient(config: ApiClientConfig): AxiosInstance {
   return axios.create({

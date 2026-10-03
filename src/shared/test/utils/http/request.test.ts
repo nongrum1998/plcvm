@@ -8,7 +8,7 @@
  */
 
 import { encryptReqBody } from '@utils/http/request';
-import { encryptFields } from '@lib';
+import { encryptFields } from '@lib/encryption/transform';
 import type { InternalAxiosRequestConfig } from 'axios';
 
 const mockEncryptFields = encryptFields as jest.Mock;
@@ -19,9 +19,9 @@ jest.mock('expo-secure-store', () => ({
   deleteItemAsync: jest.fn(),
 }));
 
-// `request.ts` imports `{ encryptFields } from '@lib/encryption'`, so the
+// `request.ts` imports `{ encryptFields } from '@lib/encryption/transform'`, so the
 // barrel is the correct mock target here.
-jest.mock('@lib/encryption', () => ({
+jest.mock('@lib/encryption/transform', () => ({
   encryptFields: jest.fn(async (value: unknown) => ({
     ...(value as Record<string, unknown>),
     encrypted: true,

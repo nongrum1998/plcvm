@@ -1,6 +1,6 @@
 import '@styles/index.css';
 import { Stack } from 'expo-router';
-import { ProviderWrapper } from '@components/providers';
+import { ProviderWrapper } from '@components/providers/provider-wrapper';
 import { SnackbarProvider } from '@components/ui/snackbar-provider';
 import * as SplashScreen from 'expo-splash-screen';
 

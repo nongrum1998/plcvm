@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { ENDPOINTS } from '@utils/constants';
-import { http } from '@utils/http';
-import { RegistrationStatusInput } from '../validators';
+import { ENDPOINTS } from '@utils/constants/endpoints';
+import { http } from '@utils/http/client';
+import { RegistrationStatusInput } from '../validators/registration';
 import { useRegistrationStore } from '../store/registration';
 
 type PPOStatus = {

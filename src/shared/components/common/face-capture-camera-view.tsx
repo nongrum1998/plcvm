@@ -4,7 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 import { FaceCaptureCamera } from './face-capture-camera';
 import { useFaceCapture } from '@hooks/use-face-capture';
-import { ErrorScreen, LoadingScreen } from '@components/screens';
+import { ErrorScreen } from '@components/screens/error-screen';
+import { LoadingScreen } from '@components/screens/loading-screen';
 
 /**
  * Camera phase states for the shared face capture view.

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import type { PensionerStatement } from '../types';
+import type { PensionerStatement } from '../types/pensioner-statement';
 
 /** Maps display labels to PensionerStatement fields for the expanded detail view. */
 const DETAIL_FIELDS: [string, keyof PensionerStatement][] = [

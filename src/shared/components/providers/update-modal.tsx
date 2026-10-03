@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, Text, Modal, ActivityIndicator } from 'react-native';
 import { useAppUpdateStore } from '@stores/update.store';
-import { Button, Icon } from '../ui';
+import { Button } from '../ui/button';
+import { Icon } from '../ui/icon';
 
 export const UpdateModal: React.FC = () => {
   const isUpdateReady = useAppUpdateStore((s) => s.isUpdateReady);

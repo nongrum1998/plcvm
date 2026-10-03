@@ -1,0 +1,31 @@
+@baseUrl=192.168.1.9:3000
+
+### Create Echo
+< {%
+   request.variables.set('RAW_BODY', JSON.stringify({
+     username: request.environment.get('PPO_NO'),
+     password: request.environment.get('FORMAT_PASSWORD')
+   }));
+   require("./scripts/enc-req.http.js");
+%}
+
+POST {{baseUrl}}/api/echo
+Content-Type: application/json
+
+# should start /plcvm always on every route
+{
+  "url": "/plcvm/user",
+  "status_code": 200,
+  "data": "{{ENC_PAYLOAD}}"
+}
+
+### Get Echo
+GET {{baseUrl}}/api/echo/user
+
+# ------------ Post-script -------------------
+> {%
+   require("./scripts/dec-res.http.js");
+%}
+
+###
+DELETE {{baseUrl}}/api/echo

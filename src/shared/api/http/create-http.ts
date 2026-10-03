@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { handleAxiosError, handleResponse } from './handle-res';
-import { ApiResponse } from '@sharedTypes';
+import type { ApiResponse } from '@sharedTypes/api/response';
 
 export function createHttp(client: AxiosInstance) {
   const request = async <T>(executor: () => Promise<AxiosResponse<T>>): Promise<ApiResponse<T>> => {

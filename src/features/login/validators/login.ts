@@ -1,5 +1,5 @@
-import { formatPassword } from '@lib';
-import { passwordValidation, ppoNoValidation } from '@validation/common';
+import { formatPassword } from '@lib/encryption/format-password';
+import { passwordValidation, ppoNoValidation } from '@validation/common/common';
 import { z } from 'zod';
 
 export const LoginSchema = z.object({

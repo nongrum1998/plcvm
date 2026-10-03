@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { RegistrationErrorView } from '@features/registration/components/registration-error-view';
-import { useRegistrationStore } from '@features/registration/store';
-import { PAGE_ROUTES } from '@utils/constants';
+import { useRegistrationStore } from '@features/registration/store/registration';
+import { PAGE_ROUTES } from '@utils/constants/routes';
 
 jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(),
@@ -10,7 +10,7 @@ jest.mock('expo-secure-store', () => ({
 }));
 
 const mockNavigate = jest.fn();
-jest.mock('@hooks', () => ({
+jest.mock('@hooks/use-safe-navigation', () => ({
   useSafeNavigation: () => ({ navigate: mockNavigate, back: jest.fn() }),
 }));
 

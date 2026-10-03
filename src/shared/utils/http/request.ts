@@ -8,7 +8,7 @@
  * through unchanged.
  */
 
-import { encryptFields } from '@lib';
+import { encryptFields } from '@lib/encryption/transform';
 import { TokenStoreManager } from '@stores/token.store';
 import type { InternalAxiosRequestConfig } from 'axios';
 

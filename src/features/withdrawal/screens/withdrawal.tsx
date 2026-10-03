@@ -1,5 +1,5 @@
-import { Container } from '@components/layout';
-import { APP_VERSION } from '@utils/constants';
+import { Container } from '@components/layout/container';
+import { APP_VERSION } from '@utils/constants/common';
 import { Text, View } from 'react-native';
 
 export default function WithdrawalScreen() {

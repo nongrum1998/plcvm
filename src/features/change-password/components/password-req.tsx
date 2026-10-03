@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { Icon } from '@components';
+import { Icon } from '@components/ui/icon';
 import { PASSWORD_RULES } from '../utils/constants/password-rule';
 
 export const PasswordRequiredments = ({ value }: { value: string }) => {

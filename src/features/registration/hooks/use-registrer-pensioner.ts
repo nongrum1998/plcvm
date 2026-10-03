@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { ENDPOINTS } from '@utils/constants';
-import { http } from '@utils/http';
-import { sha256 } from '@lib';
-import { RegisterPensionerInput } from '../validators';
+import { ENDPOINTS } from '@utils/constants/endpoints';
+import { http } from '@utils/http/client';
+import { sha256 } from '@lib/encryption/encryption';
+import { RegisterPensionerInput } from '../validators/registration';
 
 /**
  * Response payload of `POST {USER.CREATE_PENSIONER}` — callers currently

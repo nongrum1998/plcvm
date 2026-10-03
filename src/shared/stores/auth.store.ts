@@ -1,11 +1,11 @@
 import * as SecureStore from 'expo-secure-store';
 import { create } from 'zustand';
 
-import { UserT } from '../types/auth';
+import { UserT } from '../types/auth/auth';
 import { TokenStoreManager } from '@stores/token.store';
-import { logger } from '@utils';
-import { http } from '@utils/http';
-import { ENDPOINTS } from '@utils/constants';
+import { logger } from '@utils/logger/logger';
+import { http } from '@utils/http/client';
+import { ENDPOINTS } from '@utils/constants/endpoints';
 
 /**
  * Namespaced keychain key holding the cached auth profile.
@@ -147,7 +147,7 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
     await get().reset();
 
     try {
-      const { queryClient } = await import('@utils/react-query');
+      const { queryClient } = await import('@utils/react-query/query-client');
       queryClient.clear();
     } catch (error) {
       logger.error('Error Logout Query Clear', error);

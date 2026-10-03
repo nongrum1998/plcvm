@@ -1,8 +1,8 @@
 import { useAuthStore } from '@stores/auth.store';
 import { useQuery } from '@tanstack/react-query';
-import { http } from '@utils/http';
-import { ENDPOINTS } from '@utils/constants';
-import { VerificationStatusT } from '@features/verification';
+import { http } from '@utils/http/client';
+import { ENDPOINTS } from '@utils/constants/endpoints';
+import { VerificationStatusT } from '@features/verification/types/verification-status';
 
 export function useDlcStatus() {
   const { user, isSignedIn } = useAuthStore();

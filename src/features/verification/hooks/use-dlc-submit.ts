@@ -1,12 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
 import * as Application from 'expo-application';
 import { Platform } from 'react-native';
-import type { ApiResponse } from '@sharedTypes/api';
+import type { ApiResponse } from '@sharedTypes/api/response';
 import { useAuthStore } from '@stores/auth.store';
-import { ENDPOINTS } from '@utils/constants';
-import { http } from '@utils/http';
-import type { DlcDeclarationDetails, DlcResponseEnvelope, DlcSubmitPayload } from '../types';
-import { useCurrentLocation } from '@hooks';
+import { ENDPOINTS } from '@utils/constants/endpoints';
+import { http } from '@utils/http/client';
+import type {
+  DlcDeclarationDetails,
+  DlcResponseEnvelope,
+  DlcSubmitPayload,
+} from '@features/verification/types/face-verification';
+import { useCurrentLocation } from '@hooks/use-current-location';
 import { PermissionStatus } from 'expo-location';
 
 /** Values supplied by the face-verification screen for one DLC submission. */

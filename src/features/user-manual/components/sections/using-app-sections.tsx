@@ -1,10 +1,8 @@
 import { Text, View } from 'react-native';
-import { FooterImg } from '@components/common';
+import { FooterImg } from '@components/common/nic-footer-img';
 
-import {
-  UserManualSectionCard as SectionCard,
-  UserManualStepImage as StepImage,
-} from '../../components';
+import { UserManualSectionCard as SectionCard } from '@features/user-manual/components/user-manual-section-card';
+import { UserManualStepImage as StepImage } from '@features/user-manual/components/user-manual-step-image';
 
 /**
  * "Using the App" tab content for the Pensioner app user manual.

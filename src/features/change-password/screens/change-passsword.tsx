@@ -3,14 +3,18 @@ import { View, Text, Pressable } from 'react-native';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Container } from '@components/layout';
-import { Button, Icon, Ternary } from '@components';
-import { Input, AlertTitle, Alert, AlertDescription } from '@components/ui';
-import { FooterImg } from '@components/common';
+import { Container } from '@components/layout/container';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
+import { Ternary } from '@components/common/ternary';
+import { Input } from '@components/ui/input';
+import { Alert, AlertTitle, AlertDescription } from '@components/ui/alert';
+import { FooterImg } from '@components/common/nic-footer-img';
 
-import { ChangePasswrodSchema } from '../validators';
-import { useChangePassword } from '../hooks';
-import { ChangePasswordConfirmDialog, PasswordRequiredments } from '../components';
+import { ChangePasswrodSchema } from '@features/change-password/validators/change-password';
+import { useChangePassword } from '@features/change-password/hooks/use-change-password';
+import { ChangePasswordConfirmDialog } from '@features/change-password/components/change-password-confirm-dialog';
+import { PasswordRequiredments } from '@features/change-password/components/password-req';
 
 /**
  * The type of the change password form fields.

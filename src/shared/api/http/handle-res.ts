@@ -9,8 +9,7 @@
 
 import type { AxiosResponse } from 'axios';
 import { AxiosError } from 'axios';
-import { ApiResponse, BackendErrorBody } from '@sharedTypes';
-
+import type { ApiResponse, BackendErrorBody } from '@sharedTypes/api/response';
 /** Fallback shown when the backend provides no usable message. */
 const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Please try again.';
 /** Shown when the request was sent but no response arrived. */

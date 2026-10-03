@@ -1,9 +1,9 @@
 import Pdf from 'react-native-pdf';
 import { View } from 'react-native';
 
-import { useSafeNavigation } from '@hooks';
-import { logger } from '@utils';
-import { EmptyScreen } from '@components';
+import { logger } from '@utils/logger/logger';
+import { EmptyScreen } from '@components/screens/empty-screen';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
 type PreviewPDFProps = {
   base64: string;

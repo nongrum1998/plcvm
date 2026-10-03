@@ -1,7 +1,6 @@
-import { readdir } from 'node:fs/promises';
+import { readdir, rm } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { rm } from 'node:fs/promises';
 
 const root = process.cwd();
 

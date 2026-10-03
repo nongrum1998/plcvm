@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 
-import type { UserManualStepImageProps } from '../types';
+import type { UserManualStepImageProps } from '@features/user-manual/types/user-manual';
 
 /**
  * High-contrast image placeholder / container for senior guidance.

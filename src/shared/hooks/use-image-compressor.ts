@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system/legacy';
-import { MAX_IMAGE_SIZE_IN_KB } from '@utils/constants';
+import { MAX_IMAGE_SIZE_IN_KB } from '@utils/constants/common';
 
 /**
  * Result of {@link useImageCompressor.compressImageToBase64 | compressImageToBase64}.

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useCameraPermission } from 'react-native-vision-camera';
 import { FaceCaptureCameraView } from '@components/common/face-capture-camera-view';
-import { RegisterPensionerInput, RegisterPensionerSchema } from '../validators';
-import { useRegistrationStore } from '../store';
+import { RegisterPensionerInput, RegisterPensionerSchema } from '../validators/registration';
+import { useRegistrationStore } from '../store/registration';
 
 /**
  * Camera phases of the registration submit step.

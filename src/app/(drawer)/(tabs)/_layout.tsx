@@ -1,4 +1,4 @@
-import { Icon } from '@components';
+import { Icon } from '@components/ui/icon';
 import { Tabs } from 'expo-router';
 
 export default function TabLayout() {

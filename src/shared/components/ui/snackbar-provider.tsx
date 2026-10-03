@@ -3,7 +3,7 @@ import { Animated, TouchableOpacity, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSnackbarStore } from '@stores/snackbar.store';
 import { Icon } from './icon';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 const ANIMATION_DURATION = 250;
 const AUTO_DISMISS_MS = 2000;

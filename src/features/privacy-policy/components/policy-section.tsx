@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import type { PolicySectionProps } from '../types';
+import type { PolicySectionProps } from '../types/privacy-policy';
 
 /** Reusable bordered card rendering one privacy-policy clause heading above its body content. Throws nothing; purely presentational. */
 export const PolicySection: React.FC<PolicySectionProps> = ({ title, children }) => (

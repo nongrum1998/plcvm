@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
-import { Button } from '../ui';
+import { Button } from '../ui/button';
 import { Href, Stack } from 'expo-router';
-import { useSafeNavigation } from '@hooks';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
 /**
  * Props for the {@link Forbidden} screen component.

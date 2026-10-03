@@ -1,7 +1,8 @@
 import { Text, View } from 'react-native';
-import { Button, Ternary } from '@components';
-import { Container } from '@components/layout';
-import { useSafeNavigation } from '@hooks';
+import { Button } from '@components/ui/button';
+import { Ternary } from '@components/common/ternary';
+import { Container } from '@components/layout/container';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
 /** Props for {@link FaceVerificationResultView}. */
 export interface FaceVerificationResultViewProps {

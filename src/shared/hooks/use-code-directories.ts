@@ -1,8 +1,9 @@
-import { CodeDirectory } from '@sharedTypes/code-directory';
+import { CodeDirectory } from '@sharedTypes/code-directory/code-directory';
 import { useAuthStore } from '@stores/auth.store';
 import { useQuery } from '@tanstack/react-query';
-import { CODE_TYPE, ENDPOINTS } from '@utils/constants';
-import { http } from '@utils/http';
+import { ENDPOINTS } from '@utils/constants/endpoints';
+import { CODE_TYPE } from '@utils/constants/code-directories';
+import { http } from '@utils/http/client';
 
 type CodeTypeT = keyof typeof CODE_TYPE;
 

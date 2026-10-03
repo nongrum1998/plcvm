@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { APP_LINKS } from '@utils/constants';
-import { openEmailAddress } from '@utils';
+import { APP_LINKS } from '@utils/constants/app-link';
+import { openEmailAddress } from '@utils/helpers/linking/app-linking';
 
 /** Amber Section-8 grievance callout. Tapping the underlined address opens the mail client with {@link APP_LINKS.EMAIL.MEG_PLCV}. */
 export const GrievanceRedressalCard: React.FC = () => (

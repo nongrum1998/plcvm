@@ -1,8 +1,8 @@
-import { Text, View } from 'react-native';
-import { useSafeNavigation } from '@hooks';
-import { Button } from '@components';
+import { Button } from '@components/ui/button';
 import { useRegistrationStore } from '../store/registration';
-import { PAGE_ROUTES } from '@utils/constants';
+import { PAGE_ROUTES } from '@utils/constants/routes';
+import { Text, View } from 'react-native';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
 /**
  * Full-screen success state shown after a successful registration submit.

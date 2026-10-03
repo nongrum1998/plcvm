@@ -1,6 +1,6 @@
-import { useSafeNavigation } from '@hooks';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 import { Text, View } from 'react-native';
-import { Button } from '../ui';
+import { Button } from '../ui/button';
 
 type NotFoundScreenProps = {
   title?: string;

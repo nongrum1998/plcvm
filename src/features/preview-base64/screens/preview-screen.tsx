@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { PreviewPDF } from '../components/preview-pdf';
 import { saveAndShareBase64Pdf } from '@utils/helpers/save-base64-pdf';
 import { usePdfPreviewStore } from '@stores/pdf-preview';
-import { Button } from '@components';
+import { Button } from '@components/ui/button';
 
 export function PreviewScreen() {
   const isDownloadable = usePdfPreviewStore((s) => s.downloadable);

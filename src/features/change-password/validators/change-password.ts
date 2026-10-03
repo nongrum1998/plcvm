@@ -1,4 +1,4 @@
-import { passwordValidation } from '@validation/common';
+import { passwordValidation } from '@validation/common/common';
 import { z } from 'zod';
 
 export const ChangePasswrodSchema = z

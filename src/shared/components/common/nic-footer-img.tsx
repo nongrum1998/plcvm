@@ -1,4 +1,4 @@
-import { ImageFooter } from '../layout';
+import { ImageFooter } from '../layout/image-footer';
 
 /**
  * Images rendered by the app-wide footer, in display order.

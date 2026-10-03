@@ -1,0 +1,178 @@
+{
+  "/login": {
+    "success": true,
+    "message": "Authenticate",
+    "status": 200,
+    "data": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNUDAxMjM0NTY3ODkiLCJleHAiOjE3OTg4NTQ0MDB9.NOT_A_REAL_SIGNATURE",
+      "approval": "Approved",
+      "has_dlc": "0",
+      "name": "Bengtngen War Nongbah",
+      "uid": "26f4a1c8e7b94d2f9a03c5118b6d2e74",
+      "username": "MP0123456789"
+    }
+  },
+  "/logout": {
+    "success": true,
+    "message": "success",
+    "status": 200,
+    "data": {}
+  },
+  "/api/validate_token/": {
+    "success": true,
+    "message": "Token is valid",
+    "status": 200,
+    "data": {}
+  },
+  "/user": {
+    "success": true,
+    "message": "Success",
+    "status": 200,
+    "data": {
+      "app_date": "2026-08-14",
+      "app_exp": "2027-08-13",
+      "bank_accno": "10023456789012",
+      "dob": "18/04/1958",
+      "gender": "M",
+      "member_id": "M26G16O561441654",
+      "mtype": "Retired",
+      "pclass": "Class I",
+      "pclass_cd": "01",
+      "photo": null,
+      "pname": "Bengtngen War Nongbah",
+      "ppo_id": "P26F05P494841997",
+      "ppo_no": "MP0123456789",
+      "ptype_cd": "01",
+      "rela": "Self",
+      "trea_code": "MLRNG001",
+      "treasury_name": "Shillong Treasury",
+      "pan_dob": "18/04/1958",
+      "pan_no": "ABCDE1234F",
+      "height": "165",
+      "mobile_no": "9876543210",
+      "comty_cd": "7",
+      "marital_cd": "3",
+      "email": "pensioner@example.com"
+    }
+  },
+  "/get_ppo_status": {
+    "success": true,
+    "message": "Success",
+    "status": 200,
+    "data": {
+      "ppo_no": "MP0123456789",
+      "pname": "Bengtngen War Nongbah",
+      "dob": "18/04/1958",
+      "bank_accno": "10023456789012"
+    }
+  },
+  "/facial_registration": {
+    "success": true,
+    "message": "Pensioner registered successfully",
+    "status": 200,
+    "data": {
+      "ppo_no": "MP0123456789"
+    }
+  },
+  "/change_password": {
+    "success": true,
+    "message": "Password changed successfully",
+    "status": 200,
+    "data": {}
+  },
+  "/save_user": {
+    "success": true,
+    "message": "Profile updated successfully",
+    "status": 200,
+    "data": {}
+  },
+  "/dlc": {
+    "success": true,
+    "message": "Life certificate submitted successfully",
+    "status": 200,
+    "data": {
+      "status": true,
+      "message": "Life certificate submitted successfully",
+      "data": {}
+    }
+  },
+  "/dlc_status": {
+    "success": true,
+    "message": "Success",
+    "status": 200,
+    "data": {
+      "app_date": "2026-08-14",
+      "app_exp": "2027-08-13",
+      "certificate_datetime": "2026-08-19T10:42:11+05:30",
+      "certificate_id": "DLC/ML/2026/000418",
+      "device_id": "8f2c1a44-9b7e-4d3a-b6c5-1e2f3a4b5c6d",
+      "device_name": "Pixel 8",
+      "facial_regn_date": "2026-03-11",
+      "facial_regn_no": "FR26F05P494841997",
+      "facial_status": "Approved",
+      "nec": "0",
+      "nmc": "0"
+    }
+  },
+  "/paymentslip": {
+    "success": true,
+    "message": "Success",
+    "status": 200,
+    "data": {
+      "pdf": "/statements/2026/MP0123456789_20260401_20260930.pdf",
+      "pension": [
+        {
+          "date_frm": "2026-04-01",
+          "date_to": "2026-09-30",
+          "no_of_months": "6",
+          "bp": "12000.00",
+          "dp": "0.00",
+          "da": "0.00",
+          "ma": "500.00",
+          "age_bonus": "0.00",
+          "wa": "0.00",
+          "dra": "0.00",
+          "oth": "0.00",
+          "arr_gross": "0.00",
+          "gra_gross": "12500.00",
+          "comm_gross": "29500.00",
+          "deduction": "1500.00",
+          "net_amt": "11000.00",
+          "ddo_bill_date": "2026-10-03"
+        },
+        {
+          "date_frm": "2025-10-01",
+          "date_to": "2026-03-31",
+          "no_of_months": "6",
+          "bp": "12000.00",
+          "dp": "0.00",
+          "da": "0.00",
+          "ma": "500.00",
+          "age_bonus": "0.00",
+          "wa": "0.00",
+          "dra": "0.00",
+          "oth": "0.00",
+          "arr_gross": "2500.00",
+          "gra_gross": "12500.00",
+          "comm_gross": "17000.00",
+          "deduction": "1500.00",
+          "net_amt": "11000.00",
+          "ddo_bill_date": "2026-04-02"
+        }
+      ]
+    }
+  },
+  "/getcodedirectories": {
+    "success": true,
+    "message": "Success",
+    "status": 200,
+    "data": [
+      { "codevalue": "01", "description": "Self" },
+      { "codevalue": "02", "description": "Spouse" },
+      { "codevalue": "03", "description": "Son" },
+      { "codevalue": "04", "description": "Daughter" },
+      { "codevalue": "05", "description": "Father" },
+      { "codevalue": "06", "description": "Mother" }
+    ]
+  }
+}

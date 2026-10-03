@@ -1,7 +1,7 @@
 import React from 'react';
-import { useRootDetection } from '@hooks';
+import { useRootDetection } from '@hooks/use-root-detection';
 import { LoadingScreen } from '../../screens/loading-screen';
-import { ErrorScreen } from '@components/screens';
+import { ErrorScreen } from '@components/screens/error-screen';
 
 interface Props {
   children: React.ReactNode;

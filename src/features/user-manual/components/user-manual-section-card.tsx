@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import type { UserManualSectionCardProps } from '../types';
+import type { UserManualSectionCardProps } from '../types/user-manual';
 
 /**
  * Senior-friendly section card with large header badges and high contrast.

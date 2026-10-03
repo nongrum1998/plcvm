@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/react-native';
 
-import { http } from '@utils/http';
+import { http } from '@utils/http/client';
 import { useAuthStore } from '@stores/auth.store';
 import type { UserT } from '@sharedTypes/auth/auth';
 
@@ -29,9 +29,9 @@ jest.mock('expo-secure-store', () => ({
     mockBacking.delete(key);
   }),
 }));
-jest.mock('@utils/http', () => ({ http: { post: jest.fn() } }));
-jest.mock('@utils/react-query', () => ({ queryClient: { clear: jest.fn() } }));
-jest.mock('@utils', () => ({
+jest.mock('@utils/http/client', () => ({ http: { post: jest.fn() } }));
+jest.mock('@utils/react-query/query-client', () => ({ queryClient: { clear: jest.fn() } }));
+jest.mock('@utils/logger/logger', () => ({
   logger: { log: jest.fn(), warn: jest.fn(), error: jest.fn() },
 }));
 

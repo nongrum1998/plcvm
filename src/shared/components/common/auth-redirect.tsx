@@ -1,8 +1,8 @@
 import { usePathname, useLocalSearchParams, Href } from 'expo-router';
-import { useSafeNavigation } from '@hooks';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 import React, { useEffect } from 'react';
-import { LoadingScreen } from '../screens';
-import { PAGE_ROUTES } from '@utils/constants';
+import { LoadingScreen } from '../screens/loading-screen';
+import { PAGE_ROUTES } from '@utils/constants/routes';
 
 type Props = {
   children: React.ReactNode;

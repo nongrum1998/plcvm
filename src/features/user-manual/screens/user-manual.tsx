@@ -1,12 +1,15 @@
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Container } from '@components/layout';
-import { Button, Icon } from '@components';
-import { APP_LINKS, APP_VERSION, PAGE_ROUTES } from '@utils/constants';
-import { openPhoneNumber } from '@utils';
+import { Container } from '@components/layout/container';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
+import { APP_LINKS } from '@utils/constants/app-link';
+import { APP_VERSION } from '@utils/constants/common';
+import { PAGE_ROUTES } from '@utils/constants/routes';
+import { openPhoneNumber } from '@utils/helpers/linking/app-linking';
 
-import { FooterImg } from '@components/common';
-import { useSafeNavigation } from '@hooks';
+import { FooterImg } from '@components/common/nic-footer-img';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
 /**
  * Senior-friendly user manual screen for the Pensioner app.

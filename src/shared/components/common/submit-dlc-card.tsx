@@ -1,7 +1,10 @@
-import { Alert, AlertDescription, AlertTitle, Button, Icon } from '@components/ui';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
+import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
 import { Ternary } from './ternary';
-import { useSafeNavigation, useNetworkStatus } from '@hooks';
-import { PAGE_ROUTES } from '@utils/constants';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
+import { useNetworkStatus } from '@hooks/use-network-status';
+import { PAGE_ROUTES } from '@utils/constants/routes';
 import { View, Text } from 'react-native';
 import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 import * as Linking from 'expo-linking';

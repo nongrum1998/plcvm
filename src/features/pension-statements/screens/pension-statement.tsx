@@ -1,13 +1,17 @@
 import { RefreshControl, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Container, PaginatedList } from '@components/layout';
-import { usePensionerStatement } from '../hooks';
-import { PensionerStatementListItem, PensionerStatementListSkeleton } from '../components';
-import type { PensionerStatement } from '../types';
-import { Button, EmptyScreen, Ternary } from '@components';
-import { PAGE_ROUTES } from '@utils/constants';
-import { FooterImg } from '@components/common';
-import { useSafeNavigation } from '@hooks';
+import { Container } from '@components/layout/container';
+import { PaginatedList } from '@components/layout/paginated-list';
+import { usePensionerStatement } from '../hooks/use-pensioner-statement';
+import { PensionerStatementListItem } from '../components/pensioner-statement-list-item';
+import { PensionerStatementListSkeleton } from '../components/pensioner-statement-list-skeleton';
+import type { PensionerStatement } from '../types/pensioner-statement';
+import { Button } from '@components/ui/button';
+import { EmptyScreen } from '@components/screens/empty-screen';
+import { Ternary } from '@components/common/ternary';
+import { PAGE_ROUTES } from '@utils/constants/routes';
+import { FooterImg } from '@components/common/nic-footer-img';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 import { usePdfPreviewStore } from '@stores/pdf-preview';
 
 /**

@@ -1,18 +1,17 @@
 import { Text, View } from 'react-native';
 import { useEffect } from 'react';
-import {
-  RegistrationCamera,
-  RegistrationForm,
-  RegistrationStatusForm,
-  RegistrationStepHeader,
-  RegistrationSuccessView,
-} from '../components';
-import { Container } from '@components/layout';
+import { RegistrationCamera } from '../components/registration-camera';
+import { RegistrationForm } from '../components/registration-form';
+import { RegistrationStatusForm } from '../components/registration-status-form';
+import { RegistrationStepHeader } from '../components/registration-step-header';
+import { RegistrationSuccessView } from '../components/registration-success-view';
+
+import { Container } from '@components/layout/container';
 import { useRegistrationStore } from '../store/registration';
 import { RegistrationErrorView } from '../components/registration-error-view';
-import { useRegisterPensioner } from '../hooks';
-import { LoadingScreen } from '@components';
-import { RegisterPensionerInput } from '../validators';
+import { useRegisterPensioner } from '../hooks/use-registrer-pensioner';
+import { LoadingScreen } from '@components/screens/loading-screen';
+import { RegisterPensionerInput } from '../validators/registration';
 
 /**
  * Three-step pensioner registration wizard shell.

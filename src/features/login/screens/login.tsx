@@ -1,9 +1,11 @@
 import { View, Text, Image } from 'react-native';
-import { useSafeNavigation } from '@hooks';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
-import { LoginForm } from '../components';
-import { Button, Icon, NetworkStatusBanner } from '@components';
-import { Container } from '@components/layout';
+import { LoginForm } from '../components/login-form';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
+import { NetworkStatusBanner } from '@components/common/network-status-banner';
+import { Container } from '@components/layout/container';
 import { FooterImg } from '@components/common/nic-footer-img';
 import { PAGE_ROUTES } from '@utils/constants/routes';
 import { SafeAreaView } from 'react-native-safe-area-context';

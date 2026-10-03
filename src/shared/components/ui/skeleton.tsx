@@ -7,7 +7,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Context                                  */

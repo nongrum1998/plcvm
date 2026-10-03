@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { RegisterInput } from '../validators';
+import { RegisterInput } from '../validators/registration';
 
 const defaultValue: Omit<RegisterInput, 'confirm_password'> = {
   dob: '',

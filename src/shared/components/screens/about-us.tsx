@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native';
-import { Container } from '@components/layout';
+import { Container } from '@components/layout/container';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { APP_VERSION } from '@utils/constants';
-import { FooterImg } from '@components/common';
+import { APP_VERSION } from '@utils/constants/common';
+import { FooterImg } from '@components/common/nic-footer-img';
 
 export function AboutScreen() {
   return (

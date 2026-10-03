@@ -1,16 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthStore } from '@stores/auth.store';
 import { Controller, useForm } from 'react-hook-form';
-import { ProfileUpdateSchema, ProfileUpdateInput } from '../validators';
+import { ProfileUpdateSchema, ProfileUpdateInput } from '../validators/profile';
 import { View } from 'react-native';
-import { CodeDirectories, Input, Button } from '@components';
+import { CodeDirectories } from '@components/common/code-directories';
+import { Input } from '@components/ui/input';
+import { Button } from '@components/ui/button';
 import {
   PAN_MAX_LENGTH,
   MOBILE_MAX_LENGTH,
   HEIGHT_MAX_LENGTH,
-} from '@features/profile/utils/constants';
+} from '@features/profile/utils/constants/profile-update';
 import { ProfileUpdateField } from './profile-update-field';
-import { formatDate2 } from '@utils';
+import { formatDate2 } from '@utils/helpers/date/date-utils';
 
 type ProfileUpdateFormProps = {
   onSubmit: (data: ProfileUpdateInput) => void;

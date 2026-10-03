@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios';
-import { http } from '@utils/http';
-import apiClient from '@utils/http/client';
+import apiClient, { http } from '@utils/http/client';
 
 jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(),
@@ -8,7 +7,7 @@ jest.mock('expo-secure-store', () => ({
   deleteItemAsync: jest.fn(),
 }));
 jest.mock('expo-router', () => ({ router: { replace: jest.fn() } }));
-jest.mock('@lib/encryption', () => ({
+jest.mock('@lib/encryption/transform', () => ({
   encryptFields: jest.fn((v: unknown) => v),
   decryptFields: jest.fn((v: unknown) => v),
 }));

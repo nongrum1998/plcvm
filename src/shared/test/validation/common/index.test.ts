@@ -4,7 +4,7 @@ import {
   pageSizeValidation,
   passwordValidation,
   uuidValidation,
-} from '@validation/common';
+} from '@validation/common/common';
 import { z } from 'zod';
 
 /** Parses a value with a schema and returns the parsed data when it is valid. */

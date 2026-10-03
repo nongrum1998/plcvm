@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Icon } from '../ui';
-import { Container } from '@components/layout';
-import { FooterImg } from '@components/common';
+import { Icon } from '../ui/icon';
+import { Container } from '@components/layout/container';
+import { FooterImg } from '@components/common/nic-footer-img';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { APP_LINKS } from '@utils/constants';
-import { openEmailAddress, openPhoneNumber } from '@utils';
+import { APP_LINKS } from '@utils/constants/app-link';
+import { openEmailAddress, openPhoneNumber } from '@utils/helpers/linking/app-linking';
 
 export function ContactScreen() {
   return (

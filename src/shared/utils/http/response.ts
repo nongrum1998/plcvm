@@ -10,7 +10,7 @@ import { TokenStoreManager } from '@stores/token.store';
 import { ENDPOINTS } from '@utils/constants/endpoints';
 
 import { isAuthPath } from './constants';
-import { logger } from '@utils';
+import { logger } from '@utils/logger/logger';
 
 /** Shape of a login response body: `{ data: { token } }` when successful. */
 type LoginResponseBody = {

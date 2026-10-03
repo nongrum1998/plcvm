@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 /** Total number of steps in the registration wizard. */
 const TOTAL_STEPS = 3;

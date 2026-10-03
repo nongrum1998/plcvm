@@ -1,11 +1,9 @@
 import { Text, View } from 'react-native';
-import { FooterImg } from '@components/common';
+import { FooterImg } from '@components/common/nic-footer-img';
 
-import {
-  UserManualSectionCard as SectionCard,
-  UserManualStepImage as StepImage,
-} from '../components';
-import { Container } from '@components/layout';
+import { UserManualSectionCard as SectionCard } from '@features/user-manual/components/user-manual-section-card';
+import { UserManualStepImage as StepImage } from '@features/user-manual/components/user-manual-step-image';
+import { Container } from '@components/layout/container';
 import { USER_MANUAL_DLC_STEPS } from '../utils/guide-steps';
 
 /**

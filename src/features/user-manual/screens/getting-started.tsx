@@ -1,15 +1,13 @@
 import { Text, View } from 'react-native';
-import { Button } from '@components';
-import { APP_LINKS } from '@utils/constants';
-import { openEmailAddress } from '@utils';
+import { Button } from '@components/ui/button';
+import { APP_LINKS } from '@utils/constants/app-link';
+import { openEmailAddress } from '@utils/helpers/linking/app-linking';
 
-import {
-  UserManualSectionCard as SectionCard,
-  UserManualStepImage as StepImage,
-} from '../components/';
+import { UserManualSectionCard as SectionCard } from '@features/user-manual/components/user-manual-section-card';
+import { UserManualStepImage as StepImage } from '@features/user-manual/components/user-manual-step-image';
 import { USER_GETTING_STARTED_STEPS } from '../utils/guide-steps';
-import { Container } from '@components/layout';
-import { FooterImg } from '@components/common';
+import { Container } from '@components/layout/container';
+import { FooterImg } from '@components/common/nic-footer-img';
 
 /**
  * "Getting Started" tab content for the Pensioner app user manual.

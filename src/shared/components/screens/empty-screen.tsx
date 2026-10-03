@@ -1,7 +1,8 @@
 import { View, Text } from 'react-native';
-import { cn } from '@utils';
-import { Container } from '../layout';
-import { Icon, Button } from '../ui';
+import { cn } from '@utils/helpers/cn';
+import { Container } from '../layout/container';
+import { Button } from '../ui/button';
+import { Icon } from '../ui/icon';
 
 interface EmptyScreenProps {
   title: string;

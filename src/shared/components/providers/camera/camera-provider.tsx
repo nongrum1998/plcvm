@@ -3,7 +3,7 @@ import { openSettings } from 'expo-linking';
 import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 
 import { ErrorScreen } from '@components/screens/error-screen';
-import { LoadingScreen } from '@components/screens';
+import { LoadingScreen } from '@components/screens/loading-screen';
 
 /**
  * Mount gate that holds the app subtree until camera access is resolved.

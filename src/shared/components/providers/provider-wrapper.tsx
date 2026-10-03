@@ -3,21 +3,21 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { AuthRedirect } from '../common';
-import { GlobalErrorBoundary } from './errors';
-import { LocationProvider } from './location';
-import { TQueryProvider } from './query';
-import { RootProvider } from './root';
+import { AuthRedirect } from '../common/auth-redirect';
+import { GlobalErrorBoundary } from './errors/global-error-boundary';
+import { LocationProvider } from './location/location-provider';
+import { TQueryProvider } from './query/query-provider';
+import { RootProvider } from './root/root-provider';
 
 // Internal Providers
 import { AuthInitializer } from './auth-provider';
 // Shared Components & Redirects
 import { UpdateModal } from './update-modal';
 import { usePreventScreenCapture } from 'expo-screen-capture';
-import { queryClient } from '@utils/react-query';
-import { GUEST_ONLY_ROUTES, PUBLIC_ROUTES } from '@utils/constants';
+import { queryClient } from '@utils/react-query/query-client';
+import { GUEST_ONLY_ROUTES, PUBLIC_ROUTES } from '@utils/constants/auth';
 import { useAuthStore } from '@stores/auth.store';
-import { CameraProvider } from './camera';
+import { CameraProvider } from './camera/camera-provider';
 
 type Props = {
   children: React.ReactNode;

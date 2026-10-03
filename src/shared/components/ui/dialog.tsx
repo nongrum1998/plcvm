@@ -9,7 +9,7 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 interface DialogProps {
   open: boolean;

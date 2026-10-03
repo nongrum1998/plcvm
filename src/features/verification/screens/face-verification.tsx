@@ -7,24 +7,23 @@ import {
   type CameraPhase,
 } from '@components/common/face-capture-camera-view';
 import { useFaceCapture } from '@hooks/use-face-capture';
-import {
-  FaceVerificationPhotoPreviewStep,
-  FaceVerificationResultView,
-  FaceVerificationDeclarationForm,
-  FaceVerificationConfirmDialog,
-  FaceVerificationLoadingView,
-  FaceVerificationErrorView,
-} from '../components';
-import { useSubmitDLC } from '../hooks';
+import { FaceVerificationPhotoPreviewStep } from '@features/verification/components/face-verification-photo-preview';
+import { FaceVerificationResultView } from '@features/verification/components/face-verification-result-view';
+import { FaceVerificationDeclarationForm } from '@features/verification/components/face-verification-declaration-form';
+import { FaceVerificationConfirmDialog } from '@features/verification/components/face-verification-confirm-dialog';
+import { FaceVerificationLoadingView } from '@features/verification/components/face-verification-loading-view';
+import { FaceVerificationErrorView } from '@features/verification/components/face-verification-error-view';
+import { useSubmitDLC } from '@features/verification/hooks/use-dlc-submit';
 import type {
   DeclarationAnswer,
   DlcDeclarationDetails,
   FaceVerificationPhase,
   FaceVerificationRouteParams,
-} from '../types';
+} from '@features/verification/types/face-verification';
 import { useDlcStatus } from '@hooks/use-dlc-status';
 import { useAuthStore } from '@stores/auth.store';
-import { ErrorScreen, LoadingScreen } from '@components';
+import { ErrorScreen } from '@components/screens/error-screen';
+import { LoadingScreen } from '@components/screens/loading-screen';
 
 const CAMERA_PERMISSION_ERROR =
   'Camera access is required to capture your face photo. Please enable camera access in your device settings.';

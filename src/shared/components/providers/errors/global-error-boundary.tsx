@@ -1,9 +1,9 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { logger } from '@utils';
-import { Button } from '../../ui';
-import { Container } from '../../layout';
+import { logger } from '@utils/logger/logger';
+import { Button } from '../../ui/button';
+import { Container } from '../../layout/container';
 
 interface Props {
   children?: ReactNode;

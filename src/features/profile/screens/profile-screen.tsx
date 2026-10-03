@@ -1,11 +1,11 @@
 import { View, Text, RefreshControl } from 'react-native';
-import { Container } from '@components/layout';
-import { Button } from '@components';
-import { useAuthStore } from '@stores/auth.store';
-import { useSafeNavigation } from '@hooks';
-import { PAGE_ROUTES } from '@utils/constants';
-import { ProfileFieldRow } from '../components';
+import { PAGE_ROUTES } from '@utils/constants/routes';
+import { ProfileFieldRow } from '../components/profile-field-row';
 import { getFullGenderLabel } from '../utils/helpers/get-full-gender-label';
+import { Container } from '@components/layout/container';
+import { Button } from '@components/ui/button';
+import { useAuthStore } from '@stores/auth.store';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
 /**
  * Expands a stored gender code into the human-readable label shown in the

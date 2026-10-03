@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { ENDPOINTS } from '@utils/constants';
-import { http } from '@utils/http';
+import { ENDPOINTS } from '@utils/constants/endpoints';
+import { http } from '@utils/http/client';
 import { useAuthStore } from '@stores/auth.store';
-import { ProfileUpdateInput } from '../validators';
+import { ProfileUpdateInput } from '../validators/profile';
 
 /**
  * Mutation to update the signed-in user's profile.

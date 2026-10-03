@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native';
-import { Button, Icon } from '@components';
-import { Alert, AlertDescription, AlertTitle } from '@components/ui';
-import { Container } from '@components/layout';
-import { FooterImg } from '@components/common';
-import { useSafeNavigation } from '@hooks';
+import { Button } from '@components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
+import { Icon } from '@components/ui/icon';
+import { Container } from '@components/layout/container';
+import { FooterImg } from '@components/common/nic-footer-img';
+import { useSafeNavigation } from '@hooks/use-safe-navigation';
 
 /** Props for {@link FaceVerificationErrorView}. */
 export interface FaceVerificationErrorViewProps {

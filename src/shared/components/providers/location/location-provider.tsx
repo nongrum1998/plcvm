@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useCurrentLocation } from '@hooks';
+import { useCurrentLocation } from '@hooks/use-current-location';
 import { LoadingScreen } from '../../screens/loading-screen';
 import { PermissionStatus } from 'expo-location';
 import { ErrorScreen } from '@components/screens/error-screen';

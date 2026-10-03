@@ -1,10 +1,10 @@
 import { useAuthStore } from '@stores/auth.store';
 import { useQuery } from '@tanstack/react-query';
-import { http } from '@utils/http';
-import { ENDPOINTS } from '@utils/constants';
-import { decryptText } from '@lib';
-import { PensionStatementResponseI, PensionerStatement } from '../types';
-import { logger } from '@utils';
+import { http } from '@utils/http/client';
+import { ENDPOINTS } from '@utils/constants/endpoints';
+import { decryptText } from '@lib/encryption/encryption';
+import { PensionStatementResponseI, PensionerStatement } from '../types/pensioner-statement';
+import { logger } from '@utils/logger/logger';
 
 export function usePensionerStatement() {
   const { user, isSignedIn } = useAuthStore();

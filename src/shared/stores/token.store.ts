@@ -22,7 +22,7 @@ const REFRESH_TOKEN_KEY = 'pension.auth.refreshToken';
  * non-sensitive or re-derivable from the API.
  *
  * The public method signatures are depended on by the axios client in
- * `@utils/http`, so they must not change.
+ * `@utils/http/client`, so they must not change.
  */
 export const TokenStoreManager = {
   /**

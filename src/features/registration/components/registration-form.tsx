@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
-import { RegisterSchema, RegisterInput } from '../validators';
+import { RegisterSchema, RegisterInput } from '../validators/registration';
 import { View, Text, Pressable } from 'react-native';
-import { Button, Icon } from '@components';
+import { Button } from '@components/ui/button';
+import { Icon } from '@components/ui/icon';
 import { Input } from '@components/ui/input';
 import { useRegistrationStore } from '../store/registration';
 import { useState } from 'react';
-import { formatDate2 } from '@utils';
+import { formatDate2 } from '@utils/helpers/date/date-utils';
 
 /**
  * Step 2 of registration: date of birth and pension bank account number.

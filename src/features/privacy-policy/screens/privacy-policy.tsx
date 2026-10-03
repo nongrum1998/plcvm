@@ -1,15 +1,13 @@
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { FooterImg } from '@components/common';
-import { Container } from '@components/layout';
+import { FooterImg } from '@components/common/nic-footer-img';
+import { Container } from '@components/layout/container';
 
-import {
-  GrievanceRedressalCard,
-  PolicyHeader,
-  PolicyOverviewCard,
-  PolicySection,
-} from '../components';
+import { GrievanceRedressalCard } from '../components/grievance-redressal-card';
+import { PolicyHeader } from '../components/policy-header';
+import { PolicyOverviewCard } from '../components/policy-overview-card';
+import { PolicySection } from '../components/policy-section';
 
 /** Privacy Policy screen: composes header, overview, clause Sections 1–7, grievance card, and footer logos. Route entry lives at src/app/privacy-policy/index.tsx. */
 export function PrivacyPolicyScreen() {

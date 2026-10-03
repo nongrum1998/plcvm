@@ -1,9 +1,9 @@
 import { View, Text, RefreshControl } from 'react-native';
-import { Container } from '@components/layout';
+import { Container } from '@components/layout/container';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Icon } from '@components';
-import { AlertDescription, Alert, AlertTitle } from '@components/ui';
-import { FooterImg } from '@components/common';
+import { Icon } from '@components/ui/icon';
+import { AlertDescription, Alert, AlertTitle } from '@components/ui/alert';
+import { FooterImg } from '@components/common/nic-footer-img';
 import { useDlcStatus } from '@hooks/use-dlc-status';
 import { SubmitDLCCard } from '@components/common/submit-dlc-card';
 

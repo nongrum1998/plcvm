@@ -1,11 +1,11 @@
 import { View, Text } from 'react-native';
-import { Container } from '@components/layout';
+import { Container } from '@components/layout/container';
 import { useUpdateProfile } from '../hooks/use-update-profile';
-import { ProfileUpdateForm } from '../components';
+import { ProfileUpdateForm } from '../components/profile-update-form';
 import type { CameraPhase } from '@components/common/face-capture-camera-view';
 import { ProfileUpdateCamera } from '../components/profile-update-camera';
 import { useState } from 'react';
-import { ProfileUpdateInput } from '../validators';
+import { ProfileUpdateInput } from '../validators/profile';
 import { ProfileUpdateResultView } from '../components/profile-update-result';
 
 /**

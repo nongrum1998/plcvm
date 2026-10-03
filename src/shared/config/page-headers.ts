@@ -1,4 +1,4 @@
-import { PageHeader } from '@sharedTypes';
+import type { PageHeader } from '@sharedTypes/page/header';
 
 export const PAGE_HEADERS = {
   // TABS

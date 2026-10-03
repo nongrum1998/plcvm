@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
-import { Button, Ternary } from '@components';
+import { Button } from '@components/ui/button';
+import { Ternary } from '@components/common/ternary';
 
 /** Props for {@link ProfileUpdateResultView}. */
 export interface ProfileUpdateViewProps {

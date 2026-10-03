@@ -6,10 +6,11 @@
  * backend tooling. Exports are minimal until the contracts are extracted.
  */
 
-import { createApiClient } from './client';
-import { createAuthService } from './services';
-import { createHttp } from './http';
-import { ApiClientConfig, ApiInterceptors } from '@sharedTypes';
+import { createApiClient } from './client/api-client';
+import { createAuthService } from './services/auth.service';
+import { createHttp } from './http/create-http';
+import type { ApiClientConfig } from '@sharedTypes/api/client';
+import type { ApiInterceptors } from '@sharedTypes/api/interceptor';
 
 export interface ApiConfig extends ApiClientConfig {
   interceptors?: ApiInterceptors;

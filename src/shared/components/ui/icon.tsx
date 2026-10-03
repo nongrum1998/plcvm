@@ -35,7 +35,7 @@ import {
   FileCheckIcon,
   SubnodeDeleteIcon,
 } from './icons';
-import { cn } from '@utils';
+import { cn } from '@utils/helpers/cn';
 
 /** Semantic names for the icon set available to the shared UI components. */
 export type IconName =

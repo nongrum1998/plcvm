@@ -1,4 +1,5 @@
-import { ALLOW_REGEX, isFutureDate, isRealCalendarDate } from '@utils';
+import { ALLOW_REGEX } from '@utils/helpers/regex-patterns/regex-patterns';
+import { isFutureDate, isRealCalendarDate } from '@utils/helpers/date/date-utils';
 import { z } from 'zod';
 
 /** Matches a date typed as `DD/MM/YYYY` — day, slash, month, slash, four-digit year. */
@@ -20,13 +21,19 @@ const DD_MM_YYYY = /^\d{2}\/\d{2}\/\d{4}$/;
 /**
  * Zod schema for validating the profile update form.
  *
- * Covers the six fields the `update_profile` endpoint accepts: `pan_dob`
- * (typed as `DD/MM/YYYY`), `pan_no`, `mobile_no`, `height`, `comty_cd` and
- * `marital_cd`. Both coded fields are fed from option lists in
- * `../utils/constants/profile-options`.
+ * Covers the fields the `update_profile` endpoint accepts: `email`, `pan_dob`
+ * (typed as `DD/MM/YYYY`), `pan_no`, `mobile_no`, `height`, `gender`,
+ * `comty_cd`, `marital_cd` and `religion_cd`, plus an optional `image`. The
+ * coded fields are fed from option lists in `../utils/constants/profile-options`.
  *
  * Unknown keys are stripped rather than rejected, so the payload sent to the
  * API contains exactly these six fields.
+ *
+ * Ordering note: every text field chains `.trim()` **before** `.min(1)`. Zod
+ * runs checks in chain order against the value as it stands, so the reverse
+ * order measures the untrimmed input — a whitespace-only value such as `'   '`
+ * passes `.min(1)` (it is three characters long) and is then trimmed to `''`,
+ * silently accepting an empty submission. Trim first, then enforce the length.
  */
 
 export const ProfileUpdateSchema = z.object({
@@ -64,10 +71,10 @@ export const ProfileUpdateSchema = z.object({
       'Height must be a valid positive number'
     ),
 
-  religion_cd: z.string('Religion is required').min(1, 'Religion is required').trim(),
-  gender: z.string('Gender is required').min(1, 'Gender is required').trim(),
-  comty_cd: z.string('Community is required').min(1, 'Community is required').trim(),
-  marital_cd: z.string('Marital status is required').min(1, 'Marital status is required').trim(),
+  religion_cd: z.string('Religion is required').trim().min(1, 'Religion is required'),
+  gender: z.string('Gender is required').trim().min(1, 'Gender is required'),
+  comty_cd: z.string('Community is required').trim().min(1, 'Community is required'),
+  marital_cd: z.string('Marital status is required').trim().min(1, 'Marital status is required'),
 });
 
 /**
