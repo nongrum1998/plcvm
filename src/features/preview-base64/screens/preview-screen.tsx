@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { View } from 'react-native';
 
-import { Button } from '../ui';
-import { PreviewPDF } from './preview-pdf';
+import { PreviewPDF } from '../components/preview-pdf';
 import { saveAndShareBase64Pdf } from '@utils/helpers/save-base64-pdf';
 import { usePdfPreviewStore } from '@stores/pdf-preview';
+import { Button } from '@components';
 
-export function PdfPreview() {
+export function PreviewScreen() {
   const isDownloadable = usePdfPreviewStore((s) => s.downloadable);
   const rawUri = usePdfPreviewStore((s) => s.uri);
   const uri = rawUri?.startsWith('data:application/pdf;base64,')
