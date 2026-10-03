@@ -81,3 +81,31 @@ export function isRealCalendarDate(value: string): boolean {
   // of the next year), so compare the round-tripped parts to catch that.
   return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
 }
+
+export function isFutureDate(value: string): boolean {
+  const [day, month, year] = value.split('/').map(Number);
+
+  const date = new Date(year, month - 1, day);
+
+  // Reject invalid dates such as 31/02/2026.
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return false;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  return date > today;
+}
+
+export function formatDate2(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 8);
+
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) {
+    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  }
+
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+}

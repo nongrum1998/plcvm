@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { passwordValidation, ppoNoValidation } from '@validation/common';
 import { ZodIssueCode } from 'zod/v3';
-import { isRealCalendarDate } from '@utils';
+import { isFutureDate, isRealCalendarDate } from '@utils';
 
 export const RegistrationStatusSchema = z.object({
   ppo_no: ppoNoValidation('PPO Number'),
@@ -13,6 +13,7 @@ const dateOfBirthValidation = z
   .string('Date of Birth is Required')
   .min(10, 'Date of Birth should be 10 in length')
   .refine(isRealCalendarDate, 'Please enter a valid date of birth')
+  .refine((value) => !isFutureDate(value), 'Date of birth cannot be in the future')
   .trim();
 
 const bankAccountValidation = z

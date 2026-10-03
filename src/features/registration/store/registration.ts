@@ -40,10 +40,12 @@ export const useRegistrationStore = create<RegistrationStore>((set, get) => ({
     }
   },
 
-  saveData: (data) =>
+  saveData: (data) => {
     set((state) => ({
       formData: { ...state.formData, ...data },
-    })),
+    }));
+    get().nextStep();
+  },
 
   reset: () => set({ step: 1, formData: defaultValue, validation: null }),
 }));

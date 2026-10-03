@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   RegistrationCamera,
   RegistrationForm,
@@ -37,15 +37,14 @@ export default function RegistrationScreen() {
   const { step, reset } = useRegistrationStore();
   const { mutate, data, isPending, isSuccess } = useRegisterPensioner();
 
-  const onSubmit = (value: RegisterPensionerInput) => {
-    mutate(value);
-  };
+  const onSubmit = (value: RegisterPensionerInput) => mutate(value);
+
   useEffect(() => {
-    reset();
+    return () => reset();
   }, [reset]);
 
   if (isPending) {
-    return <LoadingScreen />;
+    return <LoadingScreen message="Registering Pensioner" />;
   }
 
   if (isSuccess && !data?.success) {

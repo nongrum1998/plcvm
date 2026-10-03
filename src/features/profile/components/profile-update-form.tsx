@@ -10,7 +10,7 @@ import {
   HEIGHT_MAX_LENGTH,
 } from '@features/profile/utils/constants';
 import { ProfileUpdateField } from './profile-update-field';
-import { formatDate } from '../utils/helpers/format';
+import { formatDate2 } from '@utils';
 
 type ProfileUpdateFormProps = {
   onSubmit: (data: ProfileUpdateInput) => void;
@@ -75,7 +75,7 @@ export const ProfileUpdateForm = ({
           <ProfileUpdateField label="Date of Birth (As on Pan)" error={errors.pan_dob?.message}>
             <Input
               value={value}
-              onChangeText={(text) => onChange(formatDate(text))}
+              onChangeText={(text) => onChange(formatDate2(text))}
               onBlur={onBlur}
               placeholder="DD/MM/YYYY"
               keyboardType="number-pad"

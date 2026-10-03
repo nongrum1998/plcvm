@@ -24,7 +24,7 @@ import type {
 } from '../types';
 import { useDlcStatus } from '@hooks/use-dlc-status';
 import { useAuthStore } from '@stores/auth.store';
-import { LoadingScreen } from '@components';
+import { ErrorScreen, LoadingScreen } from '@components';
 
 const CAMERA_PERMISSION_ERROR =
   'Camera access is required to capture your face photo. Please enable camera access in your device settings.';
@@ -281,6 +281,18 @@ export function FaceVerificationScreen() {
     phase === 'camera' ? 'camera' : phase === 'submitting' ? 'submitting' : 'camera';
 
   if (isSubmitPending) return <LoadingScreen message="Please wait" />;
+
+  // Handle errors when camera is unavailable on the device
+  if (phase === 'camera' && !device) {
+    return (
+      <ErrorScreen
+        description={CAMERA_UNAVAILABLE_ERROR}
+        onRetry={handleRetake}
+        title="Camera Unavailable"
+      />
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1" edges={['left', 'right']}>
       <View className="flex-1">
@@ -296,13 +308,6 @@ export function FaceVerificationScreen() {
             LoadingOverlay={<FaceVerificationLoadingView />}
           />
         )}
-
-        {phase === 'camera' && !device ? (
-          <FaceVerificationErrorView
-            errorMsg={CAMERA_UNAVAILABLE_ERROR}
-            onTryAgainPress={handleRetake}
-          />
-        ) : null}
 
         {phase === 'preview' && (
           <FaceVerificationPhotoPreviewStep

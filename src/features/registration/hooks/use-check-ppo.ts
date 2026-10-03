@@ -12,7 +12,7 @@ type PPOStatus = {
 };
 
 export function useCheckPPO() {
-  const { nextStep, setValidationData, saveData } = useRegistrationStore();
+  const { setValidationData, saveData } = useRegistrationStore();
   return useMutation({
     mutationFn: (data: RegistrationStatusInput) =>
       http.post<PPOStatus>(ENDPOINTS.USER.REGISTRATION_STATUS, data),
@@ -21,22 +21,21 @@ export function useCheckPPO() {
       if (!data.data) return;
 
       const dob = data.data?.dob;
-      const bank_account_no = data.data?.bank_accno;
+      const bank_accno = data.data?.bank_accno;
       const ppo_no = data.data?.ppo_no;
 
-      if (!dob || !bank_account_no) return;
+      if (!dob || !bank_accno) return;
 
       // Persist the server-returned PPO into both the read-only validation
       // slice and the editable formData so the camera step can submit it.
       // Never use `user?.ppo_no` here — the auth store is not populated
       // before login.
       setValidationData({
-        bank_accno: bank_account_no,
+        bank_accno,
         ppo_no,
         dob,
       });
       saveData({ ppo_no });
-      nextStep();
       return data;
     },
   });

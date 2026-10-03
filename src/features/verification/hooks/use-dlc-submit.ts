@@ -60,6 +60,7 @@ async function resolveDeviceMetadata(): Promise<DeviceMetadata> {
 export function useSubmitDLC() {
   const { user } = useAuthStore();
   const { getLocationName, permission, getCurrentLocation } = useCurrentLocation();
+  const isLocationPermissionGranted = permission === PermissionStatus.GRANTED;
 
   return useMutation<ApiResponse<unknown>, Error, DlcSubmitInput>({
     mutationFn: async ({ nec, nmc, image }) => {
@@ -67,23 +68,23 @@ export function useSubmitDLC() {
       const ppoNo = user?.ppo_no;
       let place = 'unknown';
 
+      if (!ppoId || !ppoNo) {
+        throw new Error('Authenticated PPO details are required');
+      }
+
       const currentPosition = await getCurrentLocation();
-      if (
-        currentPosition?.coords.latitude &&
-        currentPosition.coords.longitude &&
-        permission === PermissionStatus.GRANTED
-      ) {
+
+      const coords = currentPosition?.coords;
+
+      if (coords.latitude && coords.longitude && isLocationPermissionGranted) {
         const locationName = await getLocationName({
           latitude: currentPosition?.coords.latitude || 0,
           longitude: currentPosition?.coords.longitude || 0,
         });
+
         place = locationName
           ? `${locationName?.city}-${locationName?.district}-${locationName?.region}`
           : 'unknown';
-      }
-
-      if (!ppoId || !ppoNo) {
-        throw new Error('Authenticated PPO details are required');
       }
 
       const { deviceName, deviceId } = await resolveDeviceMetadata();
@@ -100,6 +101,7 @@ export function useSubmitDLC() {
       };
 
       const response = await http.post<DlcResponseEnvelope>(ENDPOINTS.DLC.CREATE, requestBody);
+
       return {
         success: response.success,
         message: response.message,

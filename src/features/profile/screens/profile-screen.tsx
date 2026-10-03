@@ -5,6 +5,7 @@ import { useAuthStore } from '@stores/auth.store';
 import { useSafeNavigation } from '@hooks';
 import { PAGE_ROUTES } from '@utils/constants';
 import { ProfileFieldRow } from '../components';
+import { getFullGenderLabel } from '../utils/helpers/get-full-gender-label';
 
 /**
  * Expands a stored gender code into the human-readable label shown in the
@@ -20,9 +21,6 @@ import { ProfileFieldRow } from '../components';
  * @returns `'Male'` for `'M'`, `'Female'` for `'F'`, and `'Other'` for any
  *   other value.
  */
-function getFullGenderLabel(value: 'M' | 'F') {
-  return value === 'M' ? 'Male' : value === 'F' ? 'Female' : 'Other';
-}
 
 /**
  * A single label/value pair rendered by {@link ProfileFieldRow} in the

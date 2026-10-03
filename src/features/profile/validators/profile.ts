@@ -1,4 +1,4 @@
-import { ALLOW_REGEX, isRealCalendarDate } from '@utils';
+import { ALLOW_REGEX, isFutureDate, isRealCalendarDate } from '@utils';
 import { z } from 'zod';
 
 /** Matches a date typed as `DD/MM/YYYY` — day, slash, month, slash, four-digit year. */
@@ -36,7 +36,8 @@ export const ProfileUpdateSchema = z.object({
     .string('Date of birth is required')
     .min(1, 'Date of birth is required')
     .refine((value) => DD_MM_YYYY.test(value), 'Please enter the date as DD/MM/YYYY')
-    .refine(isRealCalendarDate, 'Please enter a valid date of birth'),
+    .refine(isRealCalendarDate, 'Please enter a valid date of birth')
+    .refine((v) => !isFutureDate(v), 'Date of birth cannot be in the future'),
 
   pan_no: z
     .string('PAN number is required')
