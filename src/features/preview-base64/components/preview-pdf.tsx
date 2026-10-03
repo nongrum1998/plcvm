@@ -3,7 +3,6 @@ import { View } from 'react-native';
 
 import { useSafeNavigation } from '@hooks';
 import { logger } from '@utils';
-import { Container } from '../layout';
 import { EmptyScreen } from './empty-screen';
 
 type PreviewPDFProps = {
@@ -27,14 +26,12 @@ export function PreviewPDF({ base64: rawUri }: PreviewPDFProps) {
 
   if (!uri) {
     return (
-      <Container>
-        <EmptyScreen
-          title="Invalid PDF"
-          message="The provided PDF is invalid."
-          refreshLabel="Go back"
-          refresh={onPressGoBack}
-        />
-      </Container>
+      <EmptyScreen
+        title="Invalid PDF"
+        message="The provided PDF is invalid."
+        refreshLabel="Go back"
+        refresh={onPressGoBack}
+      />
     );
   }
 
